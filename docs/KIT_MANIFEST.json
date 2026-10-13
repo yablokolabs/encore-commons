@@ -1,11 +1,11 @@
 {
   "state": "Application built, tested against live Qloo and CSCS, verified over real HTTP, and publicly deployed at https://encore.yablokolabs.com. Demo video produced.",
-  "manifestNote": "The file hashes below describe the original documentation-only build kit as it was received. Several of those documents have since been rewritten with real implementation results (PROGRESS.md, BUILT_WITH.md, TOOLING_STATUS.md, DEVPOST_PROJECT_STORY.md, SITES_CSCS_SETUP.md is unchanged), so the hashes are historical and no longer match the working tree. They are retained only as a provenance record of the input kit.",
+  "manifestNote": "The file hashes below describe the original documentation-only build kit as it was received. Several of those documents have since been rewritten with real implementation results (PROGRESS.md, BUILT_WITH.md, TOOLING_STATUS.md, DEVPOST_PROJECT_STORY.md, SITES_CSCS_SETUP.md is unchanged), so the hashes are historical and no longer match the working tree. They are retained only as a provenance record of the input kit. FREEBUFF_PROMPT.md and SESSION_CONTINUATION.md were local-only working files (a paste-in prompt and a resume note); they were untracked on 2026-10-13 at the user's request and are listed in .gitignore, so their entries are removed here rather than left pointing at files the repository no longer carries.",
   "verifiedOn": "2026-10-13",
   "verified": {
     "qloo": "live: GET /search, GET /v2/insights, GET /v2/tags against https://hackathon.api.qloo.com (X-Api-Key header)",
     "cscs": "live: GET /v1/models and POST /v1/chat/completions, model swiss-ai/Apertus-v1.5-70B",
-    "tests": "70 tests across 8 files, all passing",
+    "tests": "80 tests across 9 files, all passing",
     "smoke": "16/16 live checks passing",
     "build": "next build exit 0; tsc --noEmit exit 0",
     "livePlan": "24 candidates, 24 ranked, 100% participant coverage; veto replan in 2.45s with zero extra Qloo calls",
@@ -15,16 +15,14 @@
     "videoChecks": "derive-advances --check PASS; check-audio PASS; check-frames PASS (7 scenes)"
   },
   "blockers": [
-    "Not a Sites Worker deployment: publishing to Cloudflare Workers needs `vinext init --platform=cloudflare` and a Cloudflare account credential this environment does not hold. The app is public through a named Cloudflare tunnel on the account's own zone instead, and docs/DEPLOYMENT.md states the difference.",
+    "Not a Sites Workspace publish: the app is deployed with `vinext-cloudflare deploy` to Cloudflare Worker `encore-commons` (version 078a982e), served at the custom domain encore.yablokolabs.com. The credential IS held (CLOUDFLARE_API_KEY in ~/.hermes/.env is an active Workers-scoped token), so the earlier claim that it was missing no longer applies. Since the token cannot manage DNS, the custom domain was attached in the dashboard. docs/DEPLOYMENT.md states the exact runtime.",
     "Narration voice deviation: the brief asked for a youthful adult British female voice; this ElevenLabs account is on the free tier, whose only British female premades (Alice, Lily) are middle_aged, and the British female young voices are library voices the tier refuses with HTTP 402 paid_plan_required. Both permitted voices were auditioned and no spend was authorised.",
     "nori senior-swe, Headroom and UditAkhourii/adhd remain unexecuted; switching Nori would overwrite this repository's AGENTS.md and MCP settings, so it was read rather than installed."
   ],
   "kitFiles": {
     "AGENTS.md": "cb7f6c54c304ce2d870f2f23e5430cc8b2a42be778fb48b6aaf7beceae28bc80",
-    "FREEBUFF_PROMPT.md": "5c9424d798197a180fca99501cb6a4c7419109df65bb58b2aad2bb7f96406fdc",
     "PROJECT_BUILD.md": "813eeabd2dd695d06fbdf009c1f7ea6a18c5378b46aff1733a4d9015d2cb2f71",
     "README.md": "84e80386088be4d0696e2baf6db9d200493296dc4d4103d5e6c20234e1c44a4a",
-    "SESSION_CONTINUATION.md": "f0963e2ecae930df092d340cdc394e913df6479525e0c0c8dbfc2452bc991ecc",
     "assets/encore-commons-icon.png": "af9801274c05d07c2dd5810e32cf7c50bfcf25df2922be935359d3821c36628d",
     "assets/encore-commons-logo.png": "8a91ba04e85973d3fd6147f4b05fde9af28b71ceefa8d7577932eef18d585661",
     "docs/BRANDING.md": "5cb5b735e8f67942981e55905ea2119f968499e4a40dc879e8aa52b565418def",

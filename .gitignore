@@ -20,6 +20,10 @@ videos/renders/
 docs/media/*.wav
 docs/media/*.tmp
 
+# local-only working files: kept on this machine, never committed
+FREEBUFF_PROMPT.md
+SESSION_CONTINUATION.md
+
 # editor / OS
 .DS_Store
 *.log
