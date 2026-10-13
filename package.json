@@ -17,7 +17,8 @@
     "evaluate": "tsx scripts/evaluate.ts",
     "smoke": "tsx scripts/smoke.ts",
     "vinext:check": "npx --yes vinext check",
-    "vinext:dev": "npx --yes vinext dev"
+    "vinext:dev": "npx vinext dev",
+    "vinext:build": "npx vinext build"
   },
   "keywords": [],
   "author": "",
@@ -31,8 +32,13 @@
   "devDependencies": {
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "@vitejs/plugin-rsc": "^0.5.37",
+    "react-server-dom-webpack": "^19.3.0",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
+    "vinext": "^1.1.0",
+    "vite": "^8.3.4",
     "vitest": "^5.0.4"
   },
   "private": true

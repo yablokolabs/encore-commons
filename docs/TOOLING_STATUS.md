@@ -19,7 +19,8 @@ here is claimed on the basis of a config label alone.
 
 | Tool | Status | Why |
 | --- | --- | --- |
-| Vinext / Sites | **Pending** | `vinext@1.1.0` resolved on npm and its CLI help was inspected (`dev`, `build`, `check`, `deploy`). The CLI is not installed on this host and no Sites packaging helper is present, so it was **not** executed against this codebase. Scripts are wired up; execution is blocked. |
+| Vinext / Sites runtime | **Verified** | `vinext@1.1.0` installed as a dev dependency. `vinext check` → 91% compatible, 0 issues. `vinext build` → exit 0, all 7 routes. `vinext dev` → served every route and completed a real 24-candidate plan with live providers. Config committed as `vite.config.mts`. |
+| Sites publishing | **Pending** | The hosted publish step itself still needs a Sites workspace and runtime secrets this environment does not hold. See `docs/DEPLOYMENT.md`. |
 | Videowright | **Pending** | Repository and install guide not reached before the media step was deferred. No video was produced. |
 | ElevenLabs narration | **Pending** | Key name confirmed present in `~/.hermes/.env`; no account metadata was read and no voice was auditioned or synthesised, so no quota was spent. |
 | nori senior-swe | **Pending** | Source identified (`github.com/tilework-tech/nori-skillsets`, documented `nori-skillsets download senior-swe` / `switch senior-swe`). Switching rewrites agent configuration, which would overwrite this repository's `AGENTS.md` and MCP settings, so it was **not** run. Its principles (understand existing code first, smallest adequate solution, keep tests meaningful) were applied by reading rather than installing. Freebuff native support is unverified. |

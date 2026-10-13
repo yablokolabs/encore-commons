@@ -10,6 +10,7 @@
  */
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { searchEntities, queryPlaces, extractFacts } from "../lib/qloo/client";
 import { getProviderConfig } from "../lib/config";
 import type { QlooInsightsEntity } from "../packages/domain/src/evidence";
@@ -22,7 +23,9 @@ interface DemoGroup {
   participants: { participantId: string; label: string; favorites: string[] }[];
 }
 
-const root = resolve(import.meta.dirname ?? __dirname, "..");
+// Resolved from the module URL: `__dirname` is undefined in ESM, and Vinext only
+// defines it in server code pointing at built output rather than the source tree.
+const root = fileURLToPath(new URL("..", import.meta.url));
 const now = () => Date.now();
 
 async function main(): Promise<void> {

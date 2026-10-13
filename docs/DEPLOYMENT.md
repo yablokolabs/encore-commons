@@ -1,6 +1,6 @@
 # Deployment
 
-**Status: not deployed. This is the outstanding blocker for submission.**
+**Status: the app is verified on the Sites runtime locally, but not published. Publishing is the outstanding blocker for submission.**
 
 The hackathon requires a live, externally hosted app that anyone can try signed
 out. Until a public URL exists, this repository is a working application and a
@@ -48,11 +48,37 @@ behaviour, every plan replan no-ops on `fetch`-free cached data, and there is no
 database, no background worker and no local file dependency at request time. The
 only filesystem use is at build time (fixtures) and in local scripts.
 
-Vinext is a drop-in replacement for the `next` CLI, so no source changes are
-required for the Sites path. `npm run vinext:check` and `npm run vinext:dev` are
-wired up. **They have not been executed on this host**, because neither the
-Vinext CLI nor a Sites packaging helper is installed here, and the contract
-forbids guessing packaging commands.
+## Vinext runtime verified locally
+
+Vinext is a drop-in replacement for the `next` CLI, and that is now verified by
+running it rather than assumed:
+
+```
+npx vinext check   → 91% compatible (9 supported, 2 partial, 0 issues)
+npx vinext build   → exit 0; all 7 routes compiled to dist/
+npx vinext dev     → serving in 461 ms; /, /shortlist, /trace and /api/health all HTTP 200
+```
+
+A real plan was then run **through the Vinext runtime**, not through Next.js:
+`POST /api/plan` on the Vinext dev server returned 155 KB in 14.3 s with
+`providerStatus {qloo: live, cscs: live}`, **24 candidates, 24 ranked**, top pick
+`Absinthdepot Berlin`, explanation provenance `cscs_grounded`, and a clean secret
+check.
+
+`vite.config.mts` is the Vinext config. It is `.mts` rather than `.ts` because the
+repository is not `"type": "module"`, so a `.ts` config would load as CommonJS and
+reject ESM syntax; the `.mts` extension gives Vinext a valid ESM config without
+changing module semantics repo-wide.
+
+### The two partial items, and why they are fine
+
+- **`images`** — Vinext honours `remotePatterns`, but resizing needs an optimizer. This app renders venue thumbnails as plain `<img>` elements straight from Qloo's image host, so images are served as-is and no optimizer is required.
+- **`reactStrictMode`** — Vinext does not yet wrap the App Router, but Next.js already enables strict mode for the App Router by default, so behaviour is unchanged.
+
+`vinext init` was deliberately **not** run: it rewrites project files and can add
+`"type": "module"`, which would change module semantics for the scripts and the
+config. The documented manual steps were followed instead, so the diff stays
+reviewable.
 
 ## Required runtime secrets (names only)
 
@@ -76,7 +102,7 @@ on the hosted app.
 
 1. Confirm the Sites starter/packaging helper is available on this host, and run
    `npx vinext check` against this codebase; fix anything it reports.
-2. Build: `npm ci && npm run build`.
+2. Build: `npm ci && npm run vinext:build` (verified locally).
 3. Create the site with the runtime secrets above.
 4. Deploy, then verify signed-out and in a fresh browser:
    - the three routes render on desktop and phone widths,
@@ -98,6 +124,7 @@ on the hosted app.
 - [x] No footer on any route (verified by scanning the served HTML)
 - [x] `LICENSE` present and visible; no secrets in `fixtures/`, docs or exports
 - [x] Signed-out use: no login, no account, no persisted identity
+- [x] Sites runtime verified locally (Vinext check 91%/0 issues, build, dev server, live plan)
 - [ ] **Public URL deployed** ← blocking
 - [ ] Fresh anonymous browser checked against the deployed URL
 - [ ] Mobile layout checked on a real device

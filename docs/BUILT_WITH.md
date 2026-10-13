@@ -18,7 +18,8 @@ transport-compatible.
 | vitest | 70 tests across 8 files, all passing. |
 | nodejs | Node 22 local runtime and local scripts. |
 | css | Hand-written design system in `app/globals.css`. |
-| vinext | **Prepared, not yet executed.** `npm run vinext:check` is wired up; the CLI is not installed on this host. |
+| vinext | **Verified.** `vinext check` → 91% compatible, 0 issues. `vinext build` → exit 0, all 7 routes. `vinext dev` served every route and completed a real 24-candidate plan. |
+| vite | **Verified.** v8.3.4 is the Vite server Vinext drives. |
 
 ## Honest exclusions
 

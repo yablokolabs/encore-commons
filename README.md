@@ -18,6 +18,7 @@ Not another single-user recommendation list. The product is the *agreement*.
 | Application | **Built.** Typechecks, builds, serves, and has been driven end to end over real HTTP. |
 | Qloo | **Live.** `GET /search`, `GET /v2/insights`, `GET /v2/tags` against `https://hackathon.api.qloo.com`. |
 | CSCS Apertus 1.5 70B | **Live.** `/v1/models` and `/v1/chat/completions` verified; model pinned at 70B. |
+| Sites runtime | **Verified.** `vinext check` → 91% compatible, 0 issues; `vinext build` → exit 0; `vinext dev` served every route and ran a real plan. |
 | Tests | **70 tests, 8 files, passing.** Plus 16 live smoke checks and a 3-strategy ablation. |
 | Public URL | **Not deployed.** This is the one outstanding blocker. See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). |
 
@@ -32,11 +33,7 @@ The full diagram is also available as [standalone SVG](docs/architecture.svg) an
 as [self-contained HTML](docs/architecture.html). The one thing to notice: the
 credential boundary. Provider keys exist only inside the server route handlers —
 the browser never receives one, and the two adapters are the only code that reads
-them.
-
-Everything in the diagram is implemented and exercised by the test suite or the
-live smoke test, **except the hosted deployment**, which is labelled as planned in
-the diagram itself.
+them.Every node in the diagram is implemented, and all of them are exercised by the test suite, the live smoke test or the Vinext runtime check. **The hosted deployment is the one thing that is not done**, and it is tracked as an open blocker rather than glossed over.
 
 ### How a plan is produced
 
@@ -96,7 +93,8 @@ and find a venue. Veto an alternative to watch the replan.
 | `npm run record` | Re-records the replay fixtures from live Qloo |
 | `npm run evaluate` | The ablation; add `--live-qloo` for live provider calls |
 | `npm run build` / `npm start` | Production build and server |
-| `npm run vinext:check` | Vinext compatibility check for the Sites target (not yet executed) |
+| `npm run vinext:check` | Vinext compatibility check for the Sites target |
+| `npm run vinext:build` / `npm run vinext:dev` | Build and run on the Sites (Vinext) runtime |
 
 ### Credentials
 

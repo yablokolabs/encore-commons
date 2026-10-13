@@ -173,7 +173,7 @@
 
   <div class="notes">
     <p><strong>Built and exercised:</strong> every node above exists in this repository and is covered by the test suite or the live smoke test — the client flow, the route handlers, the agent state machine, both adapters, the session store and both provider calls.</p>
-    <p><strong>Planned, not yet published:</strong> the hosted deployment. The target is Sites (Vinext on Cloudflare Workers) with runtime secrets, because the hosted app cannot read a local env file. Configuration and the public-demo checklist are prepared; no site has been deployed.</p>
+    <p><strong>Runtime verified, not yet published:</strong> the app runs on the Sites runtime (Vinext on Vite). The compatibility check reports 91% with zero issues, the Vinext build compiles all seven routes, and a Vinext dev server served every route and completed a real 24-candidate plan. What remains is the hosted deployment itself, which needs runtime secrets and an account the project does not hold.</p>
     <p><strong>Not part of the system:</strong> booking, payments, routes and travel time. Distance is straight-line between coordinates. Provider hours, price, access and availability are unverified metadata and must be confirmed with the venue. Affinity is cultural fit, not a promise of enjoyment.</p>
     <div class="palette">
       <span class="swatch"><span class="chip" style="background:#241634"></span>ink #241634</span>

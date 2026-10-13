@@ -27,6 +27,7 @@
  */
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { runPlan } from "../lib/agent/state";
 import { queryPlaces, searchEntities } from "../lib/qloo/client";
 import { cscsJson } from "../lib/cscs/client";
@@ -42,7 +43,10 @@ interface DemoGroup {
   participants: { participantId: string; label: string; favorites: string[] }[];
 }
 
-const root = resolve(import.meta.dirname ?? __dirname, "..");
+// `__dirname` is not defined in ESM and Vinext only defines it in server code,
+// where it points at built output rather than the source tree. Resolve the root
+// from the module URL instead.
+const root = fileURLToPath(new URL("..", import.meta.url));
 const args = new Set(process.argv.slice(2));
 
 const metricsOf = (plan: Plan, label: string, calls: { qloo: number; cscs: number }, latencyMs: number) => {

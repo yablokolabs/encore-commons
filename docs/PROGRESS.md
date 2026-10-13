@@ -85,3 +85,19 @@ Timestamp/timezone; milestone; branch/commit; files; exact commands/exit/results
 - **Unresolved required tools:** Vinext/Sites execution, Videowright, ElevenLabs narration, Nori senior-swe, Headroom, ADHD ideation. See `docs/TOOLING_STATUS.md`.
 - **Media status:** architecture diagram produced (HTML/SVG/PNG, embedded in the README). Narration video **not** produced.
 - **One next action:** deploy to Sites with the runtime secrets in `docs/DEPLOYMENT.md`, then re-run the public-demo checklist.
+
+## Checkpoint 6 — Sites runtime verified (2026-10-13 11:53 IST)
+
+- **Milestone:** M4 in progress. The deployment *target* is now verified; only the publish step remains.
+- **Files added:** `vite.config.mts` (Vinext/Vite ESM config). `scripts/evaluate.ts` and `scripts/record-fixtures.ts` no longer use `__dirname`.
+- **Commands and results:**
+  - `npx vinext check` → **91% compatible (9 supported, 2 partial, 0 issues)**, up from 83% with one issue.
+  - `npx vinext build` → **exit 0**; all 7 routes compiled to `dist/` (`/`, `/shortlist`, `/trace`, `/api/health`, `/api/plan`, `/api/search`, `/api/veto`).
+  - `npx vinext dev --port 3222` → serving in 461 ms; every route HTTP 200.
+  - `POST /api/plan` **on the Vinext runtime** → 155 KB in 14.3 s, `providerStatus {qloo: live, cscs: live}`, **24 candidates, 24 ranked**, top pick `Absinthdepot Berlin`, explanation `cscs_grounded`, secret check clean.
+- **Failure → cause → fix:** `vinext check` flagged `__dirname` / `__filename` as unsupported in `scripts/evaluate.ts` and `scripts/record-fixtures.ts` → CommonJS globals are undefined in ESM, and Vinext only defines them in server code pointing at build output → both scripts now resolve the project root with `fileURLToPath(new URL("..", import.meta.url))`.
+- **Decision:** `vinext init` was **not** used. It rewrites project files and may add `"type": "module"`, which would change module semantics for the whole repository. The documented manual steps were followed instead so the diff stays reviewable, and the config was named `.mts` to stay ESM without that flag.
+- **Remaining partials, both accepted and documented:** `images` (plain `<img>` from Qloo's host, so no optimizer needed) and `reactStrictMode` (App Router is already strict by default).
+- **No-footer inspection:** unchanged and re-verified on the served routes.
+- **Blocker:** the hosted publish itself. Needs a Sites workspace and runtime secrets.
+- **Next action:** publish with the runtime secrets, then walk the signed-out checklist.
