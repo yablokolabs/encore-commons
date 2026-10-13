@@ -297,5 +297,38 @@ Timestamp/timezone; milestone; branch/commit; files; exact commands/exit/results
   signature; no commit message carries a footer, trailer or signature.
 - **Hindsight:** this checkpoint retained to bank `encore-commons` (no secrets,
   no taste profiles).
-- **Next action:** commit the resolve fix; the Devpost write-up and video upload
-  remain, and neither is done without authorisation.
+- **Pushed and redeployed (authorised).** `main` pushed to `origin`
+  (`27dc153`); `npm run build:vinext` exit 0, `npm run deploy:vinext` exit 0 →
+  Worker version **`078a982e-5d18-4ce7-913f-6118d0792e41`**. The token was
+  mapped in-process from `~/.hermes/.env` and never written anywhere else
+  (`/user/tokens/verify` → `active`). Worker secrets persist across deploys, so
+  no key value was touched.
+- **Post-deploy verification, both hosts:** the live page now serves chunk
+  `page-Dc3vgbfh.js` on **both** the custom domain and the workers.dev hostname,
+  and that chunk contains the fix. `/api/health` → HTTP 200, `qloo: live`,
+  `swiss-ai/Apertus-v1.5-70B`.
+- **The fix re-verified on the new build through a real browser**, cold HTTP
+  cache and fresh profile: 7/7 confirmed after the first resolve, **7/7 during**
+  the re-resolve, **7/7 after**, both manual picks retained, `manualPicksLost`
+  empty.
+- **`scripts/verify-public.ts` against the custom domain: first run 2 failures,
+  second run 31/31 pass, exit 0.** The failures were `plan used live providers
+  (cscs=failed)` and `explanation is grounded wording (deterministic_template)`
+  — one cause, not two: the CSCS explain call missed its deadline on that run, so
+  the app fell back to the deterministic template and **said so**
+  (`modelGenerated: false`). Direct probes of CSCS immediately afterwards were
+  healthy (`/v1/models` HTTP 200 in 1 s; a chat completion in under 1 s), and the
+  re-run passed with `provenance=cscs_grounded`, plan in 8.4 s, veto in 2.1 s.
+  The deploy changed client code only, so this was provider timing, not a
+  regression — and the failure was **visible** rather than silent because the
+  fallback is labelled.
+- **Headless-browser note (measured, for the next session):** `moli` drove the UI
+  end-to-end. `lightpanda` (`1.0.0-nightly.9427`) is far faster at fetching
+  (1 s vs ~14 s for the same page) and does execute page JS and fire `load`, but
+  its `fetch` has no post-load evaluate and **silently ignored `--wait-ms 8000`**
+  (returned in 0 s), so it dumped server-rendered HTML while a 500 ms timer's
+  mutation never appeared. Driving an async UI with it needs its CDP `serve` plus
+  a client, not `fetch`. Neither engine caused the stale-bundle trap above; that
+  was caching, which `moli --http-cache-dir` controls.
+- **Next action:** the Devpost write-up and video upload remain, and neither is
+  done without authorisation.
