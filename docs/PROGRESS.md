@@ -202,3 +202,49 @@ Timestamp/timezone; milestone; branch/commit; files; exact commands/exit/results
   taste profiles).
 - **Next action:** the Devpost write-up and the video upload are the remaining
   submission steps, and neither is done without authorisation.
+
+## Checkpoint 8 — deployed to Cloudflare Workers (2026-10-13)
+
+- **Milestone:** the app now runs on the deployment target the project specified
+  from the start, and it no longer depends on the VM.
+- **Trigger:** the VM hosting the tunnel is scheduled to be destroyed, which would
+  have taken the live URL with it.
+- **Credential:** `CLOUDFLARE_API_KEY` in `~/.hermes/.env` is, despite the legacy
+  name, a valid API token (`/user/tokens/verify` → active). It is scoped to
+  Workers **only** — zones, DNS and KV all return authentication errors, which is
+  what makes the custom-domain step manual rather than automated. The value is
+  mapped in-process to `CLOUDFLARE_API_TOKEN` and never copied to another file.
+- **Commands and results:**
+  - `npx vinext init --platform cloudflare` → generated `cloudflare.config.ts`,
+    added the Cloudflare Vite plugin, added `"type": "module"`.
+  - `npx tsc --noEmit` → **exit 0**; `npx vitest run` → **80 tests, 9 files
+    passing** (70 existing, 10 new); `npx next build` → **exit 0**;
+    `npm run build:vinext` → **exit 0**, all 7 routes.
+  - `vinext-cloudflare deploy` → Worker `encore-commons`,
+    **<https://encore-commons.young-disk-9d1c.workers.dev>**.
+  - Live plan on Workers → **HTTP 200 in 11.5 s**, 157 KB, 24 candidates, 24
+    ranked, `providerStatus {qloo: live, cscs: live}`.
+- **Failure → cause → fix (the important one):** the veto **failed 3 of 3** against
+  the deployed Worker with `session_not_found`. Cause → the session store is
+  process memory, correct on one long-lived Node server and wrong on Workers,
+  where each request may be served by a different isolate with an empty map. The
+  local suite passed throughout, so nothing caught it but a real deployment.
+  Fix → a signed, gzipped session token travels with the client; the veto resolves
+  from memory first and from the token when memory misses. **Re-measured: 3 of 3
+  pass**, `sessionCarried: true` on every one, replans in 2–3 s.
+  - The signature is verified **before** decompression, so an unverified body is
+    never inflated.
+  - The provider cache travels in the token (19,772 bytes gzip+base64url) rather
+    than being dropped, because dropping it would have made the documented
+    "zero additional Qloo calls per replan" claim quietly false. The 2–3 s replan
+    against ~11 s for fresh discovery is the evidence the cache is reused.
+- **Failure → cause → fix (dependencies):** `vinext init` silently downgraded
+  `vite` from `8.3.4` to `8.3.0`. Cause → the generated range was rewritten to
+  `^8.3.0`. The plugin's peer range is `^7.0.0 || ^8.0.0`, so the downgrade was
+  unnecessary; the original range was restored and 8.3.4 reinstalled.
+- **Not done, and blocking the URL staying identical:** `encore.yablokolabs.com`
+  is **still on the tunnel**. The token cannot manage DNS or Worker custom
+  domains, so this needs one dashboard step (Workers & Pages → `encore-commons` →
+  Settings → Domains & Routes → Add custom domain).
+- **Hindsight:** checkpoints 6–8 retained to bank `encore-commons` (no secrets,
+  no taste profiles).

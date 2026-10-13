@@ -25,3 +25,5 @@ docs/media/*.tmp
 *.log
 npm-debug.log*
 coverage/
+.vinext/
+.cloudflare/

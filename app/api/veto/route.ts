@@ -2,7 +2,19 @@ import { NextResponse } from "next/server";
 import { vetoRequestSchema, MAX_REPLANS } from "@domain";
 import { runPlan } from "@/lib/agent/state";
 import { getSession, saveSession } from "@/lib/storage/session";
-import { clientKey, rateLimit, rateLimitedResponse, readJsonBody } from "@/lib/http/guard";
+import {
+  recordFromVetoReplan,
+  vetoSessionFromRecord,
+  type VetoSession,
+} from "@/lib/session/state";
+import { issueSessionToken, readSessionToken } from "@/lib/session/token";
+import {
+  clientKey,
+  rateLimit,
+  rateLimitedResponse,
+  readJsonBody,
+  MAX_VETO_BODY_BYTES,
+} from "@/lib/http/guard";
 
 export const dynamic = "force-dynamic";
 
@@ -16,12 +28,20 @@ export const dynamic = "force-dynamic";
  *
  * `expectedRevision` guards against a stale veto landing on a plan that already
  * moved on.
+ *
+ * Where the session comes from. Process memory is the fast path and the only
+ * path a single-process server needs. It is not sufficient on Cloudflare
+ * Workers, where this request may be answered by a different isolate than the
+ * one that created the plan — measured, not assumed: three of three veto calls
+ * against the deployed Worker found no session. So when memory misses, the
+ * session is recovered from the signed token the client carried back, and the
+ * response issues a fresh token reflecting the new revision.
  */
 export async function POST(request: Request): Promise<NextResponse> {
   const limit = rateLimit(`veto:${clientKey(request)}`, 20, 60_000);
   if (!limit.ok) return rateLimitedResponse(limit.retryAfterSeconds);
 
-  const body = await readJsonBody(request);
+  const body = await readJsonBody(request, MAX_VETO_BODY_BYTES);
   if (!body.ok) return body.response;
 
   const parsed = vetoRequestSchema.safeParse(body.value);
@@ -39,30 +59,43 @@ export async function POST(request: Request): Promise<NextResponse> {
     );
   }
 
-  const record = getSession(parsed.data.sessionId);
-  if (!record) {
+  // Memory first: on a warm isolate this is the whole story and nothing below
+  // changes. Then the token, which is what makes this work across isolates.
+  const stored = getSession(parsed.data.sessionId);
+  let session: VetoSession | null = stored ? vetoSessionFromRecord(stored) : null;
+  let carried = false;
+  if (session === null) {
+    const fromToken = await readSessionToken(parsed.data.sessionToken);
+    // A token must not be usable for a different session than the one addressed.
+    if (fromToken !== null && fromToken.sessionId === parsed.data.sessionId) {
+      session = fromToken;
+      carried = true;
+    }
+  }
+
+  if (session === null) {
     return NextResponse.json(
       {
         error: "session_not_found",
         message:
-          "This session is no longer in memory (sessions are intentionally short-lived). Run the plan again.",
+          "This session is no longer available. Sessions are short-lived and are not durably stored, so the group needs to run the plan again.",
       },
       { status: 404 },
     );
   }
 
-  if (parsed.data.expectedRevision !== record.plan.revision) {
+  if (parsed.data.expectedRevision !== session.revision) {
     return NextResponse.json(
       {
         error: "stale_revision",
-        message: `This plan has already moved to revision ${record.plan.revision}. Reload before voting again.`,
-        currentRevision: record.plan.revision,
+        message: `This plan has already moved to revision ${session.revision}. Reload before voting again.`,
+        currentRevision: session.revision,
       },
       { status: 409 },
     );
   }
 
-  const known = record.plan.candidates.some((c) => c.entityId === parsed.data.candidateId);
+  const known = session.candidates.some((c) => c.entityId === parsed.data.candidateId);
   if (!known) {
     return NextResponse.json(
       {
@@ -73,7 +106,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     );
   }
 
-  const participant = record.plan.profiles.find(
+  const participant = session.profiles.find(
     (profile) => profile.participantId === parsed.data.participantId,
   );
   if (!participant) {
@@ -86,19 +119,19 @@ export async function POST(request: Request): Promise<NextResponse> {
     );
   }
 
-  const replansUsed = Math.min(record.plan.replansUsed + 1, MAX_REPLANS);
+  const replansUsed = Math.min(session.replansUsed + 1, MAX_REPLANS);
   const vetoes = [
-    ...record.vetoes.map((v) => ({ participantId: v.participantId, candidateId: v.candidateId })),
+    ...session.vetoes.map((v) => ({ participantId: v.participantId, candidateId: v.candidateId })),
     { participantId: parsed.data.participantId, candidateId: parsed.data.candidateId },
   ];
   const candidateName =
-    record.plan.candidates.find((c) => c.entityId === parsed.data.candidateId)?.name ??
+    session.candidates.find((c) => c.entityId === parsed.data.candidateId)?.name ??
     parsed.data.candidateId;
 
   const { plan, trace, cache: nextCache } = await runPlan({
     sessionId: parsed.data.sessionId,
-    showLocation: { query: record.plan.showLocation },
-    participants: record.plan.profiles.map((profile) => ({
+    showLocation: { query: session.showLocation },
+    participants: session.profiles.map((profile) => ({
       participantId: profile.participantId,
       label: profile.label,
       favorites: [],
@@ -107,36 +140,53 @@ export async function POST(request: Request): Promise<NextResponse> {
       consentTimestamp: profile.consentTimestamp,
     })),
     vetoes,
-    locationRadiusM: record.plan.locationRadiusM,
-    revision: record.plan.revision + 1,
+    locationRadiusM: session.locationRadiusM,
+    revision: session.revision + 1,
     replansUsed,
-    reuse: record.cache,
+    reuse: session.cache,
   });
 
-  saveSession({
-    ...record,
+  const updatedAt = Date.now();
+  const record = recordFromVetoReplan({
+    session,
     plan,
     trace,
     cache: nextCache,
     vetoes: [
-      ...record.vetoes,
+      ...session.vetoes,
       {
         participantId: parsed.data.participantId,
         candidateId: parsed.data.candidateId,
         candidateName,
         reason: parsed.data.reason ?? null,
-        at: Date.now(),
+        at: updatedAt,
         revisionApplied: plan.revision,
       },
     ],
-    updatedAt: Date.now(),
+    createdAt: session.createdAt,
+    updatedAt,
   });
+  saveSession(record);
+
+  // Re-issue so a chained veto carries the new revision, whether or not this
+  // isolate is the one that serves it.
+  const sessionToken = await issueSessionToken(vetoSessionFromRecord(record), updatedAt);
 
   return NextResponse.json({
     sessionId: parsed.data.sessionId,
     plan,
     trace,
-    vetoes: [...record.vetoes, { participantId: parsed.data.participantId, candidateId: parsed.data.candidateId, candidateName }],
+    sessionToken,
+    /** True when the state came from the token rather than this isolate's memory. */
+    sessionCarried: carried,
+    vetoes: [
+      ...session.vetoes,
+      {
+        participantId: parsed.data.participantId,
+        candidateId: parsed.data.candidateId,
+        candidateName,
+      },
+    ],
     replanBudgetRemaining: Math.max(0, MAX_REPLANS - replansUsed),
   });
 }

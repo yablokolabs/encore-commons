@@ -4,6 +4,8 @@ import { planningRequestSchema, DEFAULT_LOCATION_RADIUS_M } from "@domain";
 import { QlooError } from "@/lib/qloo/errors";
 import { runPlan } from "@/lib/agent/state";
 import { saveSession, getSession } from "@/lib/storage/session";
+import { vetoSessionFromRecord } from "@/lib/session/state";
+import { issueSessionToken } from "@/lib/session/token";
 import { clientKey, rateLimit, rateLimitedResponse, readJsonBody } from "@/lib/http/guard";
 
 export const dynamic = "force-dynamic";
@@ -39,6 +41,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   const sessionId = parsed.data.sessionId === "new" ? randomUUID() : parsed.data.sessionId;
   const now = Date.now();
 
+
   // Reuse an existing session's provider work when the group is identical and a
   // fresh sessionId was not requested.
   const existing = parsed.data.sessionId === "new" ? null : getSession(sessionId);
@@ -59,7 +62,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       reuse: undefined,
     });
 
-    saveSession({
+    const record = {
       sessionId,
       plan,
       trace,
@@ -67,12 +70,19 @@ export async function POST(request: Request): Promise<NextResponse> {
       vetoes: existing?.vetoes ?? [],
       createdAt: existing?.createdAt ?? now,
       updatedAt: now,
-    });
+    };
+    saveSession(record);
+
+    // The client carries the session so a later veto can replan from whichever
+    // isolate answers it. Null when no signing key is configured, which is how a
+    // single-process run keeps behaving exactly as before.
+    const sessionToken = await issueSessionToken(vetoSessionFromRecord(record), now);
 
     return NextResponse.json({
       sessionId,
       plan,
       trace,
+      sessionToken,
       candidateCount: plan.candidates.length,
       rankedCount: plan.scores.filter((s) => s.worstAffinity !== null).length,
     });

@@ -1,12 +1,80 @@
 # Deployment
 
-**Status: published and live at <https://encore.yablokolabs.com>.**
+**Status: live on Cloudflare Workers, and separately on a tunnel that depends on
+one machine. These are two different hosts and only one of them is durable.**
+
+| Host | What it is | Survives the box dying? |
+| --- | --- | --- |
+| <https://encore-commons.young-disk-9d1c.workers.dev> | The app as a Cloudflare Worker | **Yes** — no server of ours involved |
+| <https://encore.yablokolabs.com> | The original named tunnel onto one VM | **No** |
 
 The hackathon requires a live, externally hosted app that anyone can try signed
-out. That now exists, and it was verified from the open internet rather than
-assumed from a config file.
+out. That exists on both hosts and was verified from the open internet rather
+than assumed from a config file.
 
-## The public deployment, as it actually is
+## Cloudflare Workers deployment (the durable host)
+
+Worker `encore-commons`, deployed with `npm run deploy:vinext`
+(`vinext init --platform cloudflare` generated the config).
+
+A note on the credential: `CLOUDFLARE_API_KEY` in `~/.hermes/.env` is, despite
+the legacy name, an API token — `GET /user/tokens/verify` reports it valid and
+active. It is mapped in-process to `CLOUDFLARE_API_TOKEN`, which is what the
+Workers tooling reads, so the value is never copied to another file. The token
+is scoped to Workers only: it cannot read zones, DNS or KV, which is why the
+custom domain below is still a manual step.
+
+| | |
+| --- | --- |
+| Runtime secrets | `QLOO_API_KEY`, `CSCS_INFERENCE_API_KEY`, `QLOO_MIN_GAP_MS`, `ENCORE_SESSION_SECRET` — held by Cloudflare as Worker secrets, not on the VM |
+| Verified routes | `/`, `/shortlist`, `/trace`, `/api/health` all HTTP 200; no footer marker on any of them |
+| `/api/health` | `qloo.mode = live`, origin `https://hackathon.api.qloo.com`, model `swiss-ai/Apertus-v1.5-70B`, both keys present (values never returned) |
+| Live plan on Workers | HTTP 200 in **11.5 s**, 157 KB, **24 candidates, 24 ranked**, `providerStatus {qloo: live, cscs: live}`, 14 trace steps all `ok` |
+| Veto on Workers | **3 of 3 pass** after the session fix below (before it: 0 of 3) |
+| Build | `npx tsc --noEmit` exit 0; `npx vitest run` **80 tests, 9 files, passing**; `next build` exit 0; `vinext build` exit 0 |
+
+### The session store, and the bug Workers exposed
+
+On Cloudflare Workers a request is served by whichever isolate is nearest, so a
+veto cannot rely on the plan request having filled that isolate's memory. That
+was measured rather than reasoned about: three of three veto calls against the
+deployed Worker returned `session_not_found`, because each landed on an isolate
+with an empty map. The demo's central beat was broken in production while every
+local test passed.
+
+The fix is not a shared store. A signed, gzipped session token travels with the
+client, so a veto carries the state it needs and any isolate can serve it. Three
+properties were treated as load-bearing:
+
+- **The signature is verified before the payload is decompressed.** An unverified
+  body is attacker-controlled bytes; inflating it first would hand anyone a
+  decompression bomb.
+- **The provider cache travels too**, which is why the token is about 20 KB
+  compressed rather than 2 KB. Without it a replan would re-query Qloo and the
+  project's stated property — a veto replan costs zero additional Qloo calls —
+  would have quietly become false. Replans measure 2–3 s on the Worker, not the
+  ~11 s a fresh discovery costs, which is the evidence the cache is being reused.
+- **Memory remains the fast path**, so a single-process run behaves exactly as
+  before and the token is simply absent when no signing key is configured.
+
+Measured token size: 19,772 bytes gzip+base64url for the real Berlin group. The
+veto body limit was raised to 96 KB for this route alone, a little over twice the
+measured token, so the bound still rejects an allocation attempt.
+
+The token is signed, not encrypted, and no confidentiality is claimed for it: it
+carries pseudonymous labels, provider entity ids and affinity numbers, which is
+data the client already holds and already sends back.
+
+### Still to do: the custom domain
+
+The token used here cannot manage DNS or Worker custom domains (both return
+authentication errors), so `encore.yablokolabs.com` has **not** been moved onto
+the Worker. Until it is, that hostname still points at the tunnel and stops
+working when the VM does. One dashboard step fixes it: Workers & Pages →
+`encore-commons` → Settings → Domains & Routes → Add → Custom domain →
+`encore.yablokolabs.com`.
+
+## The tunnel host, and why it is no longer the primary
 
 ```
 https://encore.yablokolabs.com

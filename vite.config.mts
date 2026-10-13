@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import vinext from "vinext";
+import { cloudflare } from "@cloudflare/vite-plugin";
 
 /**
  * Vinext (Next.js on Vite) configuration for the Sites runtime.
@@ -17,5 +18,13 @@ import vinext from "vinext";
  *    enables strict mode for it by default, so behaviour is unchanged.
  */
 export default defineConfig({
-  plugins: [vinext()],
+  plugins: [
+    vinext(),
+    cloudflare({
+      viteEnvironment: {
+        name: "rsc",
+        childEnvironments: ["ssr"],
+      },
+    }),
+  ],
 });

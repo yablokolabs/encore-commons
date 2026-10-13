@@ -18,17 +18,23 @@ Not another single-user recommendation list. The product is the *agreement*.
 | Application | **Built.** Typechecks, builds, serves, and has been driven end to end over real HTTP. |
 | Qloo | **Live.** `GET /search`, `GET /v2/insights`, `GET /v2/tags` against `https://hackathon.api.qloo.com`. |
 | CSCS Apertus 1.5 70B | **Live.** `/v1/models` and `/v1/chat/completions` verified; model pinned at 70B. |
-| Sites runtime | **Verified.** `vinext check` → 91% compatible, 0 issues; `vinext build` → exit 0; `vinext dev` served every route and ran a real plan. |
-| Tests | **70 tests, 8 files, passing.** Plus 16 live smoke checks and a 3-strategy ablation. |
-| Public URL | **Live: <https://encore.yablokolabs.com>** — verified signed out from the open internet, 31/31 checks. |
+| Sites runtime | **Deployed.** `vinext check` → 91% compatible, 0 issues; `vinext build` → exit 0; **published to Cloudflare Workers and verified live.** |
+| Tests | **80 tests, 9 files, passing.** Plus 16 live smoke checks and a 3-strategy ablation. |
+| Durable URL | **Live: <https://encore-commons.young-disk-9d1c.workers.dev>** — a Cloudflare Worker, so it does not depend on any server of ours. |
+| Legacy URL | **Live: <https://encore.yablokolabs.com>** — verified signed out from the open internet, 31/31 checks, but it rides a tunnel onto one machine and stops when that machine does. |
 | Demo video | **Produced.** 115.8 s narrated walkthrough in [docs/media](docs/media/), built from real captures of the running app. |
 | Voice | **Deviation disclosed.** The brief asked for a youthful adult British female voice; the account's free tier has no such premade voice and refuses library voices with HTTP 402, so the closest permitted British female voice was auditioned and used. See [docs/TOOLING_STATUS.md](docs/TOOLING_STATUS.md). |
 
-One thing is deliberately not claimed: the public host is a named Cloudflare
-tunnel on this account's own zone, **not** a Sites Worker deployment — publishing
-to Workers needs a Cloudflare account credential this environment does not hold.
-[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) states the difference rather than
-glossing over it.
+The app now runs on Cloudflare Workers, which is the deployment target this
+project specified all along. The older tunnel host still exists and is still
+verified, but it is no longer the primary, because it depends on a single machine.
+
+One thing is deliberately not claimed: **`encore.yablokolabs.com` has not been
+moved onto the Worker yet.** The available token is scoped to Workers only and
+cannot manage DNS or custom domains, so that hostname still points at the tunnel
+and will stop working when the VM does. The Worker's own URL is durable today;
+the custom domain is a one-step dashboard change recorded in
+[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
 ## Architecture
 

@@ -17,6 +17,14 @@ export interface ClientSession {
   sessionId: string;
   plan: Plan;
   trace: TraceStep[];
+  /**
+   * Signed session state issued by `/api/plan`, sent back with a veto.
+   *
+   * It exists because the server cannot assume the veto lands on the same
+   * isolate that built the plan. Absent when the deployment has no signing key,
+   * in which case the server resolves the session from its own memory.
+   */
+  token?: string | undefined;
 }
 
 export function readClientSession(): ClientSession | null {

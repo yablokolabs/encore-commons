@@ -11,6 +11,15 @@ import { NextResponse } from "next/server";
 
 const MAX_BODY_BYTES = 32 * 1024;
 
+/**
+ * A veto legitimately carries the signed session, which is about 20 KB gzipped,
+ * so it is allowed a larger body than the other write routes. The limit is still
+ * a bound rather than a free pass: it is a little over twice the measured token,
+ * so a request that exceeds it is not a session but an attempt to make the
+ * Worker allocate.
+ */
+export const MAX_VETO_BODY_BYTES = 96 * 1024;
+
 const globalForGuard = globalThis as unknown as {
   __encoreBuckets?: Map<string, { count: number; resetAt: number }>;
 };
@@ -42,19 +51,18 @@ export function rateLimit(
   return { ok: true, retryAfterSeconds: 0 };
 }
 
-export async function readJsonBody(request: Request): Promise<
-  { ok: true; value: unknown } | { ok: false; response: NextResponse }
-> {
+export async function readJsonBody(
+  request: Request,
+  maxBytes: number = MAX_BODY_BYTES,
+): Promise<{ ok: true; value: unknown } | { ok: false; response: NextResponse }> {
+  const limitMb = Math.round((maxBytes / 1024) * 10) / 10;
+  const tooLarge = () =>
+    NextResponse.json(
+      { error: "request_too_large", message: `Request body is larger than the ${limitMb} KB limit.` },
+      { status: 413 },
+    );
   const declared = request.headers.get("content-length");
-  if (declared && Number.parseInt(declared, 10) > MAX_BODY_BYTES) {
-    return {
-      ok: false,
-      response: NextResponse.json(
-        { error: "request_too_large", message: "Request body is larger than the 32 KB limit." },
-        { status: 413 },
-      ),
-    };
-  }
+  if (declared && Number.parseInt(declared, 10) > maxBytes) return { ok: false, response: tooLarge() };
   let text: string;
   try {
     text = await request.text();
@@ -64,15 +72,7 @@ export async function readJsonBody(request: Request): Promise<
       response: NextResponse.json({ error: "unreadable_body" }, { status: 400 }),
     };
   }
-  if (text.length > MAX_BODY_BYTES) {
-    return {
-      ok: false,
-      response: NextResponse.json(
-        { error: "request_too_large", message: "Request body is larger than the 32 KB limit." },
-        { status: 413 },
-      ),
-    };
-  }
+  if (text.length > maxBytes) return { ok: false, response: tooLarge() };
   try {
     return { ok: true, value: JSON.parse(text) as unknown };
   } catch {

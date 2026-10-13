@@ -18,22 +18,29 @@
     "smoke": "tsx scripts/smoke.ts",
     "vinext:check": "npx --yes vinext check",
     "vinext:dev": "npx vinext dev",
-    "vinext:build": "npx vinext build"
+    "vinext:build": "npx vinext build",
+    "dev:vinext": "vite dev --port 3001",
+    "build:vinext": "vite build",
+    "start:vinext": "vite preview",
+    "deploy:vinext": "vinext-cloudflare deploy"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@vinext/cloudflare": "^1.1.0",
     "next": "^16.4.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^2.0.0-beta.sha-8c6014f9a",
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
     "@vitejs/plugin-rsc": "^0.5.37",
+    "cf": "^1.0.0-beta.16",
     "react-server-dom-webpack": "^19.3.0",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
@@ -41,5 +48,6 @@
     "vite": "^8.3.4",
     "vitest": "^5.0.4"
   },
-  "private": true
+  "private": true,
+  "type": "module"
 }

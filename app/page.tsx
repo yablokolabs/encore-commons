@@ -186,6 +186,7 @@ export default function HomePage() {
         sessionId?: string;
         plan?: unknown;
         trace?: unknown;
+        sessionToken?: string | null;
         message?: string;
       };
       if (!response.ok || !json.sessionId || !json.plan) {
@@ -197,6 +198,9 @@ export default function HomePage() {
         sessionId: json.sessionId,
         plan: json.plan as never,
         trace: (json.trace ?? []) as never,
+        // Carried so a veto can be served by any isolate, not just the one that
+        // built this plan. Null when the deployment has no signing key.
+        token: json.sessionToken ?? undefined,
       });
       router.push("/shortlist");
     } catch {

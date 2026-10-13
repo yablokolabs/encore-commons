@@ -29,6 +29,8 @@ export default function ShortlistPage() {
   const [plan, setPlan] = useState<Plan | null>(null);
   const [trace, setTrace] = useState<TraceStep[]>([]);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  /** The signed session issued by /api/plan, sent back with a veto. */
+  const [sessionToken, setSessionToken] = useState<string | undefined>(undefined);
   const [vetoParticipant, setVetoParticipant] = useState<string>("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,6 +43,7 @@ export default function ShortlistPage() {
       setPlan(session.plan);
       setTrace(session.trace);
       setSessionId(session.sessionId);
+      setSessionToken(session.token);
       setVetoParticipant(session.plan.profiles[0]?.participantId ?? "");
     }
   }, []);
@@ -77,11 +80,13 @@ export default function ShortlistPage() {
           participantId: vetoParticipant,
           candidateId,
           expectedRevision: plan.revision,
+          sessionToken,
         }),
       });
       const json = (await response.json()) as {
         plan?: Plan;
         trace?: TraceStep[];
+        sessionToken?: string | null;
         replanBudgetRemaining?: number;
         message?: string;
         error?: string;
@@ -92,7 +97,14 @@ export default function ShortlistPage() {
       }
       setPlan(json.plan);
       setTrace(json.trace ?? []);
-      writeClientSession({ sessionId, plan: json.plan, trace: json.trace ?? [] });
+      // Keep the refreshed token so a second veto from this tab still works.
+      setSessionToken(json.sessionToken ?? undefined);
+      writeClientSession({
+        sessionId,
+        plan: json.plan,
+        trace: json.trace ?? [],
+        token: json.sessionToken ?? undefined,
+      });
       setReplanBudget(json.replanBudgetRemaining ?? null);
       setNotice(
         json.plan.selectedCandidateId
@@ -111,6 +123,7 @@ export default function ShortlistPage() {
     setPlan(null);
     setTrace([]);
     setSessionId(null);
+    setSessionToken(undefined);
   }
 
   if (!plan) {

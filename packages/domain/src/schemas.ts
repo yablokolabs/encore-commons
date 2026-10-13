@@ -279,6 +279,15 @@ export const vetoRequestSchema = z.object({
   /** Guards against stale vetoes landing on a plan that has already moved on. */
   expectedRevision: z.number().int().nonnegative(),
   reason: trimmedText(160).optional(),
+  /**
+   * The signed session state, issued by `/api/plan`.
+   *
+   * Present when the deployment cannot rely on process memory surviving between
+   * two requests — Cloudflare Workers serve them from different isolates — so the
+   * veto carries the state it needs rather than assuming it is still resident.
+   * Optional: a single-process server resolves the session from memory instead.
+   */
+  sessionToken: z.string().min(1).max(131072).optional(),
 });
 
 export const searchRequestSchema = z.object({
