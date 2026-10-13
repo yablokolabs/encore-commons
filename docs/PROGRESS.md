@@ -169,3 +169,36 @@ Timestamp/timezone; milestone; branch/commit; files; exact commands/exit/results
   taste profiles).
 - **Next action:** the Devpost write-up and video upload are the remaining submission
   steps, and neither is done without authorisation.
+
+## Checkpoint 7 — pushed and verified through the public interfaces (2026-10-13)
+
+- **Milestone:** M4 complete for the repository and the demo film. `origin/main` moved
+  `65a6329..4f030b1` after explicit authorisation; no force, no rewrite.
+- **Verified, not assumed:** `git ls-remote origin HEAD` equals local `HEAD`
+  (`4f030b1`); a fresh fetch lists all four artifacts on the remote tree
+  (`docs/architecture.png`, both caption files, and the 7,635,134-byte MP4). The
+  committed MP4 blob `a650c9d` is byte-identical to the file that was measured, so the
+  published artifact is the artifact the checks ran against — h264 1920×1080 + AAC,
+  115.817 s, 22 cues ending at the video's end.
+- **Public surfaces checked directly:**
+  - `https://encore.yablokolabs.com` → **HTTP 200** in 0.146 s.
+  - Served HTML for `/`, `/shortlist`, `/trace` → **HTTP 200**, and none of the three
+    carries `powered by`, `all rights reserved`, `copyright`, `<footer`,
+    `generated with` or `co-authored-by`.
+  - The MP4 is reachable from the public repository → **HTTP 200**, 7,635,134 bytes.
+- **Failure → cause → fix (export gate):** the no-footer rule was asserted
+  automatically for the served routes but **not** for the video, which is also an
+  export. The video's cleanliness rested on a one-off grep. Fix → `check-frames.mjs`
+  now scans every scene at every beat for footer and attribution markers, using the
+  same list as `scripts/verify-public.ts` so the two cannot drift.
+- **The new gate was proved able to fail:** a `Powered by Qloo` node was temporarily
+  injected into `encore-limits`, the check caught it (`FOOTER: powered by`) and exited
+  **1**. The scene was then restored byte-identical to the committed version. A check
+  that cannot fail is not a check, so this was measured rather than assumed.
+- **No-footer inspection:** the scan above runs per beat across all 7 scenes and finds
+  nothing; no route carries a footer marker; no commit message carries a footer,
+  trailer or signature.
+- **Hindsight:** checkpoints 6 and 7 retained to bank `encore-commons` (no secrets, no
+  taste profiles).
+- **Next action:** the Devpost write-up and the video upload are the remaining
+  submission steps, and neither is done without authorisation.

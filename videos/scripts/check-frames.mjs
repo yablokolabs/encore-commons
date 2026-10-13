@@ -12,13 +12,20 @@
  *    fallbacks with wider metrics, which both changes the layout and makes the
  *    overflow worse. The font assertions below are what proved the fonts were
  *    never loaded at all.
+ * 3. A footer or attribution strip. The rule is that no footer, credits strip,
+ *    vendor badge or rights notice appears on a screen, report or export, and a
+ *    video is an export. There is no reasonable way to read that back off the
+ *    encoded pixels, so the scan runs against the rendered frame the exporter
+ *    draws from — the same text the encoder is handed — using the same marker
+ *    list as scripts/verify-public.ts uses on the served routes.
  *
  * The check drives the project's own dev player through `#/<segment>/<beat>`
  * deep links (the format the player's hash router documents), so it measures
  * the scenes as the render mounts them, not a copy.
  *
  * Usage: node scripts/check-frames.mjs [--port 5199] [--verbose]
- * Exit code 1 when any scene overflows the frame or a font is missing.
+ * Exit code 1 when any scene overflows the frame, a font is missing, or a
+ * rendered scene carries a footer or attribution marker.
  */
 
 import { spawn } from 'node:child_process';
@@ -33,6 +40,23 @@ const SLUG = 'encore_demo';
 
 /** The page the scenes are laid out on, and the rule the content must clear. */
 const FRAME = { width: 1920, height: 1080, safeX: 128, safeY: 96 };
+
+/**
+ * Footer and attribution markers that must never appear in a rendered scene.
+ *
+ * Deliberately identical to FOOTER_MARKERS in scripts/verify-public.ts, which
+ * runs the same rule against the served routes: a marker added to one list and
+ * not the other is exactly the kind of gap this check exists to close, so the
+ * two are kept in step by hand and the comment says so. `<footer` is tested as
+ * an element, the rest are tested against the frame's rendered text.
+ */
+const FOOTER_MARKERS = [
+	"<footer",
+	"powered by",
+	"all rights reserved",
+	"generated with",
+	"co-authored-by",
+];
 
 const args = process.argv.slice(2);
 const portIndex = args.indexOf('--port');
@@ -183,6 +207,23 @@ const fontState = () => {
 	return result;
 };
 
+/**
+ * The text the frame renders, and whether it contains a `<footer>` element.
+ *
+ * This reads the DOM the renderer lays out, not the encoded video: the export
+ * is pixels and no OCR is available here, so the frame's own text is the
+ * closest thing to the exporter's input that can be asserted on.
+ */
+const footerScan = () => {
+	const host = document.getElementById('player-host');
+	const frame = host?.querySelector('scene-frame') ?? host;
+	if (!frame) return { error: 'no scene frame to scan for a footer' };
+	return {
+		text: (frame.innerText ?? frame.textContent ?? '').replace(/\s+/g, ' ').toLowerCase(),
+		footers: frame.querySelectorAll('footer').length,
+	};
+};
+
 async function main() {
 	const { chromium } = await import('playwright');
 	const scenes = schedule();
@@ -210,6 +251,11 @@ async function main() {
 				if (result.error) fail(`${scene.id} beat ${beat}: ${result.error}`);
 				await page.evaluate(() => document.fonts.ready);
 				const fonts = await page.evaluate(fontState);
+				const footer = await page.evaluate(footerScan);
+				if (footer.error) fail(`${scene.id} beat ${beat}: ${footer.error}`);
+				const footerHits = FOOTER_MARKERS.filter((marker) =>
+					marker === '<footer' ? footer.footers > 0 : footer.text.includes(marker),
+				);
 				const lowest = result.items.reduce((worst, item) => (item.bottom > worst.bottom ? item : worst), {
 					bottom: -Infinity,
 					ref: 'none',
@@ -235,7 +281,8 @@ async function main() {
 						`  ${overflow > 0 ? `BOTTOM +${overflow.toFixed(0)} px (${lowest.ref})` : 'fits'}` +
 						`${rightOverflow > 0 ? `  RIGHT +${rightOverflow.toFixed(0)} px (${rightmost.ref})` : ''}` +
 						`${topOverflow > 0 ? `  TOP +${topOverflow.toFixed(0)} px (${highest.ref})` : ''}` +
-						`${missing.length > 0 ? `  FONTS MISSING: ${missing.join(', ')}` : ''}`,
+						`${missing.length > 0 ? `  FONTS MISSING: ${missing.join(', ')}` : ''}` +
+						`${footerHits.length > 0 ? `  FOOTER: ${footerHits.join(', ')}` : ''}`,
 				);
 				if (VERBOSE) {
 					for (const item of result.items.filter((item) => item.bottom > bottomLimit)) {
@@ -246,14 +293,20 @@ async function main() {
 				if (rightOverflow > 0) failures.push(`${scene.id} beat ${beat}: ${rightmost.ref} reaches ${rightmost.right.toFixed(0)} px, ${rightOverflow.toFixed(0)} px past the right rule`);
 				if (topOverflow > 0) failures.push(`${scene.id} beat ${beat}: ${highest.ref} starts at ${highest.top.toFixed(0)} px, ${topOverflow.toFixed(0)} px above the top rule`);
 				if (missing.length > 0) failures.push(`${scene.id} beat ${beat}: fonts not loaded: ${missing.join(', ')}`);
+				if (footerHits.length > 0)
+					failures.push(
+						`${scene.id} beat ${beat}: footer or attribution in the frame: ${footerHits.join(', ')}`,
+					);
 			}
 		}
 		if (failures.length > 0) {
 			console.error(`[frames] ${failures.length} problem(s):`);
 			for (const problem of [...new Set(failures)]) console.error(`  - ${problem}`);
-			fail('scenes do not fit the frame, or the brand fonts are not loaded');
+			fail('scenes do not fit the frame, the brand fonts are not loaded, or a footer is present');
 		}
-		console.log(`[frames] PASS: ${scenes.length} scenes fit the frame with the brand fonts loaded`);
+		console.log(
+			`[frames] PASS: ${scenes.length} scenes fit the frame, use the brand fonts, and carry no footer or attribution`,
+		);
 	} finally {
 		await browser?.close();
 		try {
