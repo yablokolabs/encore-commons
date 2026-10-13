@@ -234,10 +234,16 @@ Timestamp/timezone; milestone; branch/commit; files; exact commands/exit/results
   pass**, `sessionCarried: true` on every one, replans in 2–3 s.
   - The signature is verified **before** decompression, so an unverified body is
     never inflated.
-  - The provider cache travels in the token (19,772 bytes gzip+base64url) rather
-    than being dropped, because dropping it would have made the documented
-    "zero additional Qloo calls per replan" claim quietly false. The 2–3 s replan
-    against ~11 s for fresh discovery is the evidence the cache is reused.
+  - The provider cache travels in the token rather than being dropped, because
+    dropping it would have made the documented "zero additional Qloo calls per
+    replan" claim quietly false. The 2–3 s replan against ~11 s for fresh
+    discovery is the evidence the cache is reused.
+  - **Token size, corrected:** an offline replay measurement gave 19,772 bytes
+    gzip+base64url, but a **live** plan produces **39,395 characters**. The live
+    figure is the real one, and it makes the raised limit load-bearing: the
+    route's original 32 KB cap would have rejected live vetoes with HTTP 413
+    while every local test still passed. The limit is 96 KB, a little over twice
+    the live token.
 - **Failure → cause → fix (dependencies):** `vinext init` silently downgraded
   `vite` from `8.3.4` to `8.3.0`. Cause → the generated range was rewritten to
   `^8.3.0`. The plugin's peer range is `^7.0.0 || ^8.0.0`, so the downgrade was

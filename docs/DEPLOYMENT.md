@@ -57,9 +57,15 @@ properties were treated as load-bearing:
 - **Memory remains the fast path**, so a single-process run behaves exactly as
   before and the token is simply absent when no signing key is configured.
 
-Measured token size: 19,772 bytes gzip+base64url for the real Berlin group. The
-veto body limit was raised to 96 KB for this route alone, a little over twice the
-measured token, so the bound still rejects an allocation attempt.
+Measured token size, and the measurement is worth stating carefully because the
+first one was misleading. An offline replay run of the demo group produced
+**19,772 bytes** gzip+base64url, which is the figure an earlier draft of this
+note quoted. A **live** plan against the real Qloo API produces a larger cache
+and a token of **39,395 characters**. The live figure is the one that matters, and
+it means the raised limit is load-bearing rather than cosmetic: the route's
+original 32 KB cap would have rejected live vetoes with HTTP 413 while every
+local test still passed. The limit is 96 KB — a little over twice the live token,
+so it accommodates real sessions and still rejects an allocation attempt.
 
 The token is signed, not encrypted, and no confidentiality is claimed for it: it
 carries pseudonymous labels, provider entity ids and affinity numbers, which is
