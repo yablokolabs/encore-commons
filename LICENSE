@@ -19,18 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-Third-party data and services are not covered by this licence.
-
-- Qloo entity data and affinity values are provided by the Qloo API under the
-  Qloo hackathon terms. They are not redistributed in this repository: the
-  recorded fixtures in `fixtures/replay` are a sanitised subset used for tests
-  only, and they are not published as a public dataset.
-- Place names, images, addresses and opening hours shown in the app are
-  third-party metadata returned by Qloo and remain subject to their sources'
-  terms. Venue images are loaded from Qloo's image host at runtime and are not
-  redistributed here.
-- Branding images in `assets/` and `public/` were generated for this project
-  and are covered by the MIT licence above.

@@ -162,9 +162,6 @@ popularity baseline **wins on agreement**, and that is reported rather than
 hidden. The unguided model named five real Berlin venues that all resolved in
 Qloo — and three of them had no comparable affinity at all for this group.
 
-## Documentation
-
-| Document | Contents |
 | --- | --- |
 | [docs/API_CONTRACT.md](docs/API_CONTRACT.md) | Every verified route, header, parameter, limit and sanitised sample |
 | [docs/DECISIONS.md](docs/DECISIONS.md) | Ten decisions with the evidence that settled each, plus open items |
@@ -175,6 +172,7 @@ Qloo — and three of them had no comparable affinity at all for this group.
 | [docs/DEVPOST_PROJECT_STORY.md](docs/DEVPOST_PROJECT_STORY.md) | The submission write-up |
 | [docs/BUILT_WITH.md](docs/BUILT_WITH.md) | Only the technologies genuinely used, with evidence |
 | [docs/BRANDING.md](docs/BRANDING.md) | Branding asset provenance |
+| [docs/LICENSE_THIRD_PARTY.md](docs/LICENSE_THIRD_PARTY.md) | Third-party data and service terms |
 
 ## Project layout
 
@@ -200,5 +198,15 @@ docs/                     Documentation and the architecture diagram
 
 ## Licence
 
-[MIT](LICENSE). Third-party data and services are not covered by it — see the
-notes at the end of the licence file.
+[MIT](LICENSE) — the source code and the branding assets generated for this
+project.
+
+Third-party data and services are **not** covered by that licence. Qloo entity
+data and affinity values, and CSCS Apertus inference, belong to their providers,
+and the recorded fixtures are a sanitised test subset rather than a redistributed
+dataset. The full terms, including how to remove the fixtures if those terms
+require it, are in [docs/LICENSE_THIRD_PARTY.md](docs/LICENSE_THIRD_PARTY.md).
+
+## Documentation
+
+| Document | Contents |
