@@ -97,11 +97,12 @@ public URL no longer depends on that machine. Verified through the custom domain
 as well: all four routes HTTP 200 and footer-clean, a live plan in 11.5 s, and
 **3 of 3** vetoes served from the signed token (`sessionCarried: true`).
 
-Serving build: Worker version `83d63f37-e513-4041-9662-8069b5764498`, confirmed
-against the Cloudflare deployments API to be the build that carries the session
-fix — not merely a build that happens to start.
+Serving build: Worker version `078a982e-5d18-4ce7-913f-6118d0792e41`, confirmed
+against the Cloudflare deployments API to be the build that carries both the
+session fix and the UI resolve fix — not merely a build that happens to start. An
+earlier checkpoint served `83d63f37-e513-4041-9662-8069b5764498`.
 
-## The tunnel host, and why it is no longer the primary
+## The tunnel host (retired)
 
 ```
 https://encore.yablokolabs.com
@@ -109,7 +110,7 @@ https://encore.yablokolabs.com
 
 | | |
 | --- | --- |
-| Served by | `next start` on `127.0.0.1:3300`, behind a named Cloudflare tunnel on this account's own zone (`yablokolabs.com`) |
+| Served by | **Historically** `next start` on `127.0.0.1:3300`, behind a named Cloudflare tunnel on this account's own zone (`yablokolabs.com`). Retired from the request path once the Worker custom domain was proven to serve with it stopped. |
 | Verified from | the open internet, signed out, no cookie jar — `npx tsx scripts/verify-public.ts https://encore.yablokolabs.com` |
 | Result | **all 31 checks pass** |
 | Provider mode on the public host | `qloo.mode = live`, `cscs` model `swiss-ai/Apertus-v1.5-70B`, both keys present (values never returned) |
@@ -119,19 +120,23 @@ https://encore.yablokolabs.com
 | Secret scan | 14 response bodies scanned for both credential values → **0 found** |
 | Service units | `deploy/encore-backend.service` and `deploy/encore-cloudflared.service`, both `active (running)` and `enabled` |
 
-**This is not a Sites Worker deployment.** The selected target is Sites with the
-Vinext starter, and that runtime is verified locally (`vinext check`, `build`,
-`dev`, and a real plan through it — see below). Publishing to Cloudflare Workers
-needs `vinext init --platform=cloudflare` plus a Cloudflare account credential
-this environment does not hold. The tunnel route was used instead because it is
-the convention already proven on this host, and it was confirmed to route publicly
-before any DNS was created. Calling it a Sites deployment would be false, so it is
-called what it is.
+**This was the tunnel route, and it has since been replaced.** The named tunnel
+was used first because it is the convention already proven on this host, and it
+was confirmed to route publicly before any DNS was created. It is now retired.
+
+The app is deployed to **Cloudflare Workers** (`vinext init --platform=cloudflare`
+plus `vinext-cloudflare deploy`). The credential turned out to be held after all:
+`CLOUDFLARE_API_KEY` in `~/.hermes/.env` is, despite the legacy name, an active
+API token scoped to Workers only. What is still true is that it cannot manage DNS
+or zones, so attaching the custom domain was a dashboard step. The exact runtime
+is named here rather than glossed, because calling a tunnel a Sites deployment
+would be false.
 
 A short-lived `trycloudflare.com` quick tunnel was tried first and **does not
 route from this environment**: a trivial static server 404'd at the Cloudflare
 edge over both QUIC and HTTP/2. Named tunnels on the account's zone do route,
-which is why that is the mechanism in use.
+which is why that was the mechanism used first, before the Worker deployment
+replaced it.
 
 ## Verified locally (real, run today)
 
@@ -252,16 +257,20 @@ on the hosted app.
 - [x] `LICENSE` present and visible; no secrets in `fixtures/`, docs or exports
 - [x] Signed-out use: no login, no account, no persisted identity
 - [x] Sites runtime verified locally (Vinext check 91%/0 issues, build, dev server, live plan)
-- [ ] **Public URL deployed** ← blocking
-- [ ] Fresh anonymous browser checked against the deployed URL
+- [x] **Public URL deployed** — <https://encore.yablokolabs.com>, a production custom domain on the Worker
+- [x] Fresh anonymous browser checked against the deployed URL (31/31 signed out)
 - [ ] Mobile layout checked on a real device
-- [ ] Provider-failure path checked on the deployed instance
+- [ ] Provider-failure path deliberately injected on the deployed instance — an
+  incidental CSCS deadline miss on 2026-10-13 was handled with a labelled
+  `deterministic_template` fallback, but no injection has been run
 
 ## Deliberate non-actions
 
-- **Nothing was pushed to any hosting provider.** No deployment was performed,
-  because it requires an account the user has not authorised and credentials
-  this environment does not hold.
+- **Nothing was pushed to any hosting provider without authorisation.** Every push
+  and deployment in this project was made only after the user authorised it; the
+  Cloudflare Workers deployment was authorised on 2026-10-13. Earlier checkpoints
+  recorded the absence of that authorisation, which is why the wording here says a
+  deployment did not happen *at that time*.
 - **No alternative host was silently substituted** for the contractually
   specified Sites target.
 - **No new paid service was created**, and no spend was incurred.

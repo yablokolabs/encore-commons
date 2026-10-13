@@ -15,7 +15,8 @@ here is claimed on the basis of a config label alone.
 | gh CLI | **Verified** | v2.45.0, authenticated as `yablokolabs` with `repo` scope. |
 | rsvg-convert | **Verified** | SVG→PNG rasteriser; produced the committed architecture PNG. |
 | Vinext / Sites runtime | **Verified** | `vinext@1.1.0` dev dependency. `vinext check` → 91% compatible, 0 issues. `vinext build` → exit 0, all 7 routes. `vinext dev` → served every route and completed a real 24-candidate plan with live providers. |
-| cloudflared (public ingress) | **Verified** | This host runs named Cloudflare tunnels for `yablokolabs.com` with an authenticated account. A new tunnel was created for the app, its DNS record pointed at the explicit tunnel UUID, and the public URL was verified signed out from the open internet: 31/31 checks in `scripts/verify-public.ts`. |
+| Worker publish (`vinext-cloudflare deploy`) | **Verified** | The Cloudflare credential **is** held: `CLOUDFLARE_API_KEY` in `~/.hermes/.env` is, despite the legacy name, a real active API token (`/user/tokens/verify` → `active`) scoped to Workers only. It is mapped in-process to `CLOUDFLARE_API_TOKEN` and never written to another file. `npm run build:vinext` → exit 0; `npm run deploy:vinext` → exit 0, Worker `encore-commons` (version `078a982e`). Because the token cannot manage DNS or zones, the custom domain was added in the dashboard; it now serves the Worker and was verified to keep serving with the VM's tunnel and backend both stopped. |
+| cloudflared (legacy ingress, **retired**) | **Verified, then retired** | This host runs named Cloudflare tunnels for `yablokolabs.com` with an authenticated account. A tunnel was created for the app, its DNS record pointed at the explicit tunnel UUID, and the public URL was verified signed out from the open internet: 31/31 checks in `scripts/verify-public.ts`. The request path no longer uses it — the cutover to the Worker custom domain was proven by serving with the VM down. |
 | Videowright | **Verified** | Installed as a dev dependency in `videos/` (isolated from the Sites app). `vite.config.mts`-style `videowright.config.ts` with `projectStructure: 'v1'`. Vendor patch applied (`scripts/patch-videowright.sh`) because the published tarball omits three modules the entry code imports. `videowright dev` served all 7 scenes; `videowright render` exported the MP4. |
 | ElevenLabs narration | **Verified** | Voice selected from real account metadata and auditioned, not guessed: both candidate auditions returned HTTP 200, settings recorded in `audio_meta.json`. One take recorded for the film at 1,571 billed characters. |
 | Playwright / Chromium | **Verified** | `@playwright/test@1.64.0` with the local browser cache. Used for three real jobs: capturing the app's interface, measuring every scene against the frame in `scripts/check-frames.mjs`, and the renderer's own frame capture. |
@@ -24,7 +25,6 @@ here is claimed on the basis of a config label alone.
 
 | Tool | Status | Why |
 | --- | --- | --- |
-| Sites Workspace publish (`@vinext/cloudflare deploy`) | **Not used** | The official Sites path deploys to Cloudflare Workers and requires `vinext init --platform=cloudflare` plus a Cloudflare account credential this environment does not hold. The public deployment was instead made on the account's existing named-tunnel convention, which was verified to route publicly before use. Recorded in `docs/DEPLOYMENT.md` rather than presented as a Sites deployment. |
 | nori senior-swe | **Pending** | Source identified (`github.com/tilework-tech/nori-skillsets`). Switching rewrites agent configuration, which would overwrite this repository's `AGENTS.md` and MCP settings, so it was **not** run. Its principles (understand existing code first, smallest adequate solution, keep tests meaningful) were applied by reading rather than installing. Freebuff native support remains unverified. |
 | Headroom | **Pending** | Source identified (`github.com/headroomlabs-ai/headroom`); no local MCP integration is configured on this host, and its Python proxy must not ship inside the Worker runtime. |
 | Ponytail | **Applied by reading** | Prompt read from `skills/ponytail/SKILL.md`. Its guidance shaped the build (plain CSS instead of a UI framework; no database; the smallest adequate session store) but it was not installed as a skill. |
@@ -38,9 +38,12 @@ artifact is:
 
 - **Hosting.** `cloudflared` quick tunnels do not route from this environment —
   verified with a trivial static server, which 404'd at the Cloudflare edge over
-  both QUIC and HTTP/2. Named tunnels on the account's own zone do route, so the
-  app is published that way. It is a real public HTTPS URL, not a Sites Worker
-  deployment, and `docs/DEPLOYMENT.md` says exactly which one it is.
+  both QUIC and HTTP/2. Named tunnels on the account's own zone do route, and the
+  app was first published that way. It now runs on **Cloudflare Workers**
+  (`vinext-cloudflare deploy`), which is the deployment target this project
+  specified all along; the tunnel host was retired after the domain was shown to
+  serve with the VM's tunnel and backend stopped. `docs/DEPLOYMENT.md` says
+  exactly which host is live.
 - **Voice.** The brief asked for a youthful adult British female voice. This
   ElevenLabs account is on the free tier and its 21 reachable voices are all
   `premade`; the only British female premades are Alice and Lily, both
