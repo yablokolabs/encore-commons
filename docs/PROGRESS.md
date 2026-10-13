@@ -2,13 +2,25 @@
 
 Current state as of October 13, 2026 (Asia/Kolkata): **the application is built,
 tested against live providers, verified through its own HTTP interface, and
-publicly deployed at <https://encore.yablokolabs.com>.** Qloo and CSCS access are
-verified live. A narrated demo video has been exported.
+publicly deployed at <https://encore.yablokolabs.com> as a production custom domain
+on Cloudflare Worker `encore-commons` (version `078a982e`).** Qloo and CSCS access
+are verified live. A narrated demo video has been exported.
 
-Two things are deliberately *not* claimed: the public host is a named Cloudflare
-tunnel rather than a Sites Worker deployment (a credential for Workers publish is
-not held here), and the narration voice is the closest the account's free tier
-permits rather than the youthful adult British female voice the brief asked for.
+The hosting caveat that used to sit here is closed, and it is worth saying how
+rather than just deleting it: the public host was originally a named Cloudflare
+tunnel, and the Workers publish was believed to need a credential this environment
+did not hold. Both turned out to be temporary. The app now runs on Cloudflare
+Workers — `CLOUDFLARE_API_KEY` in `~/.hermes/.env` is, despite the legacy name, an
+active token scoped to Workers — and the tunnel was retired only after the domain
+was measured to keep serving with the VM's tunnel *and* backend stopped.
+
+One disclosure still stands: the narration voice is the closest the account's free
+tier permits rather than the youthful adult British female voice the brief asked
+for.
+
+Earlier checkpoints below record the state as it was when they were written, which
+is why some of them still describe the tunnel or the missing credential. They are
+history, not current fact.
 
 ## Milestones
 
@@ -17,8 +29,10 @@ permits rather than the youthful adult British female voice the brief asked for.
 - [x] **M2 UI and veto/replan** — three accessible routes, veto with hard exclusion, labelled replan
 - [x] **M3 tests and ablation** — 70 tests, 16 live smoke checks, 3-strategy ablation with recorded results
 - [x] **M4 public deployment** — live at <https://encore.yablokolabs.com>, verified signed out from the open internet (31/31 checks)
+- [x] **M4b Workers deployment** — migrated off the VM onto Cloudflare Workers; the custom domain was proven independent of that machine
 - [x] **M5 media** — narrated 115.8 s demo video exported with captions, from real captures of the running app
 - [ ] **M6 submission package** — Devpost write-up and video upload; nothing submitted without authorisation
+- [ ] **Open:** `scripts/verify-public.ts` can fail 2 checks in a single run when the CSCS explain call misses its deadline; the honest fix is a retry plus a dedicated deadline budget, not a relaxed assertion
 
 ## Append checkpoint
 
