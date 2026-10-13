@@ -67,6 +67,17 @@ Timestamp/timezone; milestone; branch/commit; files; exact commands/exit/results
 - **Blocker:** hosting. See `docs/DEPLOYMENT.md`.
 - **Next action:** publish the repository, then deploy when authorised.
 
+## Checkpoint 5 — repository published (2026-10-13 11:49 IST)
+
+- **Commit:** `1487a80` "Build Encore Commons: a Qloo-grounded agent for group venue planning" — 81 files, 15,636 insertions. Then a follow-up commit making the licence canonical MIT.
+- **Published:** <https://github.com/yablokolabs/encore-commons> — visibility **PUBLIC**, `licenseInfo` detected as **MIT**, default branch `main`.
+- **Secret inspection before pushing:** scanned the whole tree for the live values of `QLOO_API_KEY`, `CSCS_INFERENCE_API_KEY` and `ELEVENLABS_API_KEY` with a fixed-string search → **0 occurrences**. No `.env`, `.env.local` or `.env.production` present in the repository.
+- **No-footer inspection:** scanned all source and docs for `powered by`, `all rights reserved`, `<footer`, `generated with codebuff`, `co-authored-by` → the only match is the sentence in `docs/DEPLOYMENT.md` that documents the scan itself. The commit message has no footer, trailer or signature of any kind.
+- **Failure → cause → fix:** `gh repo view` reported `licenseInfo: null` after the first push → the appended third-party-terms section after the MIT text stopped GitHub's licence detection, and the submission requires a licence visible in the About section → `LICENSE` was restored to unmodified MIT text and the provider terms moved to `docs/LICENSE_THIRD_PARTY.md`; `licenseInfo` now reports `mit`.
+- **Hindsight:** verified checkpoint retained to bank `encore-commons` (no secrets, no taste profiles). `context-mode` indexed 69 files / 212 sections and search returned relevant hits.
+- **Blocker:** public hosted deployment still outstanding. Hosting requires authorisation for an account this environment does not hold.
+- **Next action:** obtain hosting authorisation, run the Sites/Vinext path with the runtime secrets in `docs/DEPLOYMENT.md`, then walk the public-demo checklist signed out.
+
 ## Handoff
 
 - **Commit:** pending at handoff time (working tree dirty with new files).
