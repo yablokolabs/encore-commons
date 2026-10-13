@@ -96,7 +96,17 @@ export default function HomePage() {
 
   async function resolveAll(): Promise<void> {
     setPlanError(null);
-    const entries = filledFavorites;
+    // Only unresolved favourites are fetched. This used to reset every entry to
+    // loading and re-derive each from Qloo's exact-name match, which discarded a
+    // person's own confirmation: correcting one match and resolving again put it
+    // back to the automatic guess, and every other match disappeared from the
+    // form while the sequential refetch ran. A confirmed choice is the user's,
+    // so it is left untouched.
+    const entries = filledFavorites.filter((entry) => {
+      const state = selections[selectionKey(entry.participantId, entry.favorite)];
+      return !(state?.status === "done" && state.chosenEntityId !== null);
+    });
+    if (entries.length === 0) return;
     setSelections((current) => {
       const next = { ...current };
       for (const entry of entries) {

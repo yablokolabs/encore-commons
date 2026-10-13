@@ -248,9 +248,54 @@ Timestamp/timezone; milestone; branch/commit; files; exact commands/exit/results
   `vite` from `8.3.4` to `8.3.0`. Cause → the generated range was rewritten to
   `^8.3.0`. The plugin's peer range is `^7.0.0 || ^8.0.0`, so the downgrade was
   unnecessary; the original range was restored and 8.3.4 reinstalled.
-- **Not done, and blocking the URL staying identical:** `encore.yablokolabs.com`
-  is **still on the tunnel**. The token cannot manage DNS or Worker custom
-  domains, so this needs one dashboard step (Workers & Pages → `encore-commons` →
-  Settings → Domains & Routes → Add custom domain).
+- **Custom domain: done.** The token could not manage DNS or Worker custom
+  domains, so the cutover was done in the dashboard — the proxied CNAME to the
+  tunnel was removed and `encore.yablokolabs.com` was added as a production
+  custom domain on the Worker. Verified in checkpoint 9.
 - **Hindsight:** checkpoints 6–8 retained to bank `encore-commons` (no secrets,
   no taste profiles).
+
+## Checkpoint 9 — the domain stands alone, and a real UI bug in re-resolve (2026-10-13)
+
+- **Files:** `app/page.tsx` (client resolve handler).
+- **Custom domain verified independent of the VM:** with the VM's tunnel **and**
+  the local backend both stopped (origin down, nothing listening on 3300),
+  `https://encore.yablokolabs.com` still returned **HTTP 200** with live
+  providers. Both services were then restored (`systemctl is-active` →
+  `active active`). The scheduled VM destruction no longer takes the live URL.
+- **Session isolation through the domain:** 3 of 3 veto/replan calls passed
+  end-to-end against the custom domain, every one resolving from the signed
+  token rather than process memory (`sessionCarried: true`).
+- **Serving build confirmed:** the live host served version `83d63f37…`, the
+  build that carries the session fix, so the domain is not quietly behind the
+  Worker hostname.
+- **A user-reported UI bug was reproduced, not dismissed.** Report: changing one
+  Qloo match appeared to undo the others. Driven through a real browser on the
+  live domain:
+  - changing a single match to a different Qloo option **kept** all 7 confirmed
+    (not the bug);
+  - pressing **“Resolve favourites with Qloo”** a second time dropped the panel
+    to **1/1 confirmed** mid-flight and **reverted both manual picks** to the
+    automatic match. That is a real defect.
+- **Failure → cause → fix:** `resolveAll` reset *every* entry to `loading` and
+  re-derived each from Qloo's exact-name match, discarding confirmations the
+  participant had already made. Fix → entries already `done` **and** carrying a
+  chosen entity are filtered out before the reset, so a re-resolve is a no-op
+  when nothing is outstanding, and `entries.length === 0` returns early.
+- **Re-measured after deploy (`d3168666`), cold HTTP cache and fresh browser
+  profile:** after first resolve **7/7** confirmed; after two manual picks
+  **7/7** retained; during re-resolve **7/7** retained; after re-resolve **7/7**
+  retained; `manualPicksLost: []`. The fix is also present in the served chunk
+  `page-Cs79fisQ.js`.
+- **Measurement trap worth recording:** the first post-deploy run of the same
+  test still showed the old behaviour, which looked like a stale bundle. It was
+  `moli`'s own HTTP cache replaying the previous chunk under the **same
+  filename** (the chunk path does not change between these builds). Re-running
+  with `--http-cache-dir` pointed at an empty directory showed the fix. A browser
+  cache can therefore imitate a failed deploy — verify through a cold cache.
+- **No-footer inspection:** the edited route renders no footer, attribution or
+  signature; no commit message carries a footer, trailer or signature.
+- **Hindsight:** this checkpoint retained to bank `encore-commons` (no secrets,
+  no taste profiles).
+- **Next action:** commit the resolve fix; the Devpost write-up and video upload
+  remain, and neither is done without authorisation.
