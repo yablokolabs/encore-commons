@@ -20,21 +20,18 @@ Not another single-user recommendation list. The product is the *agreement*.
 | CSCS Apertus 1.5 70B | **Live.** `/v1/models` and `/v1/chat/completions` verified; model pinned at 70B. |
 | Sites runtime | **Deployed.** `vinext check` → 91% compatible, 0 issues; `vinext build` → exit 0; **published to Cloudflare Workers and verified live.** |
 | Tests | **80 tests, 9 files, passing.** Plus 16 live smoke checks and a 3-strategy ablation. |
-| Durable URL | **Live: <https://encore-commons.young-disk-9d1c.workers.dev>** — a Cloudflare Worker, so it does not depend on any server of ours. |
-| Legacy URL | **Live: <https://encore.yablokolabs.com>** — verified signed out from the open internet, 31/31 checks, but it rides a tunnel onto one machine and stops when that machine does. |
+| Public URL | **Live: <https://encore.yablokolabs.com>** — a production custom domain on the Cloudflare Worker, so it does not depend on any server of ours. |
+| Worker URL | **Live: <https://encore-commons.young-disk-9d1c.workers.dev>** — the same deployment on its workers.dev hostname. |
 | Demo video | **Produced.** 115.8 s narrated walkthrough in [docs/media](docs/media/), built from real captures of the running app. |
 | Voice | **Deviation disclosed.** The brief asked for a youthful adult British female voice; the account's free tier has no such premade voice and refuses library voices with HTTP 402, so the closest permitted British female voice was auditioned and used. See [docs/TOOLING_STATUS.md](docs/TOOLING_STATUS.md). |
 
-The app now runs on Cloudflare Workers, which is the deployment target this
-project specified all along. The older tunnel host still exists and is still
-verified, but it is no longer the primary, because it depends on a single machine.
+The app runs on Cloudflare Workers, which is the deployment target this project
+specified all along, and it is reachable at its own domain.
 
-One thing is deliberately not claimed: **`encore.yablokolabs.com` has not been
-moved onto the Worker yet.** The available token is scoped to Workers only and
-cannot manage DNS or custom domains, so that hostname still points at the tunnel
-and will stop working when the VM does. The Worker's own URL is durable today;
-the custom domain is a one-step dashboard change recorded in
-[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+The earlier tunnel host has been retired. That was verified rather than assumed:
+with the VM's tunnel **and** its backend stopped, `encore.yablokolabs.com` still
+served HTTP 200 with live providers, so the public URL depends on no machine of
+ours. Details in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
 ## Architecture
 

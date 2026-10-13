@@ -5,8 +5,11 @@ one machine. These are two different hosts and only one of them is durable.**
 
 | Host | What it is | Survives the box dying? |
 | --- | --- | --- |
-| <https://encore-commons.young-disk-9d1c.workers.dev> | The app as a Cloudflare Worker | **Yes** — no server of ours involved |
-| <https://encore.yablokolabs.com> | The original named tunnel onto one VM | **No** |
+| <https://encore.yablokolabs.com> | **The public URL.** A production custom domain on the Worker | **Yes** — proven, see below |
+| <https://encore-commons.young-disk-9d1c.workers.dev> | The same Worker on its workers.dev hostname | **Yes** |
+
+The named tunnel onto one VM has been retired. It survived this project long
+enough to serve the first public demo, and it is no longer in the request path.
 
 The hackathon requires a live, externally hosted app that anyone can try signed
 out. That exists on both hosts and was verified from the open internet rather
@@ -71,14 +74,32 @@ The token is signed, not encrypted, and no confidentiality is claimed for it: it
 carries pseudonymous labels, provider entity ids and affinity numbers, which is
 data the client already holds and already sends back.
 
-### Still to do: the custom domain
+### The custom domain, and proof the VM is out of the path
 
-The token used here cannot manage DNS or Worker custom domains (both return
-authentication errors), so `encore.yablokolabs.com` has **not** been moved onto
-the Worker. Until it is, that hostname still points at the tunnel and stops
-working when the VM does. One dashboard step fixes it: Workers & Pages →
-`encore-commons` → Settings → Domains & Routes → Add → Custom domain →
-`encore.yablokolabs.com`.
+`encore.yablokolabs.com` is now a production custom domain on Worker
+`encore-commons`. The `cf` token used here could not manage DNS or Worker custom
+domains — both return authentication errors — so the cutover was done in the
+Cloudflare dashboard: the proxied CNAME pointing at the tunnel was removed and
+the custom domain was added in its place.
+
+Because a hostname can only resolve to one thing, "the cutover is done" is a
+claim worth testing rather than trusting. It was tested by taking the VM out:
+
+| Step | Result |
+| --- | --- |
+| `systemctl stop cloudflared-encore encore-backend` | both `inactive`/`failed`; nothing listening on `127.0.0.1:3300` |
+| `GET https://encore.yablokolabs.com/` with the VM's app **down** | **HTTP 200** |
+| `GET …/api/health` with the VM's app **down** | **HTTP 200**, `qloo: live`, cscs key present |
+| Services restarted afterwards | both `active`, VM left as found |
+
+The domain kept serving with the origin dead, which is the evidence that the
+public URL no longer depends on that machine. Verified through the custom domain
+as well: all four routes HTTP 200 and footer-clean, a live plan in 11.5 s, and
+**3 of 3** vetoes served from the signed token (`sessionCarried: true`).
+
+Serving build: Worker version `83d63f37-e513-4041-9662-8069b5764498`, confirmed
+against the Cloudflare deployments API to be the build that carries the session
+fix — not merely a build that happens to start.
 
 ## The tunnel host, and why it is no longer the primary
 
