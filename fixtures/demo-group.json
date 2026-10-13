@@ -1,0 +1,25 @@
+{
+  "name": "Demo group — Berlin show",
+  "showLocation": {
+    "query": "Berlin",
+    "label": "Berlin (example show location)"
+  },
+  "locationRadiusM": 6000,
+  "participants": [
+    {
+      "participantId": "p-ada",
+      "label": "Ada",
+      "favorites": ["Radiohead", "In the Mood for Love", "Piranesi"]
+    },
+    {
+      "participantId": "p-bo",
+      "label": "Bo",
+      "favorites": ["Nina Simone", "Seven Samurai"]
+    },
+    {
+      "participantId": "p-cy",
+      "label": "Cy",
+      "favorites": ["Daft Punk", "Blade Runner"]
+    }
+  ]
+}

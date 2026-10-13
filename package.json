@@ -1,0 +1,39 @@
+{
+  "name": "encore-commons",
+  "version": "0.1.0",
+  "description": "Different tastes. One great night. A Qloo-powered agent for group venue planning.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "next start --port 3000",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "record": "tsx scripts/record-fixtures.ts",
+    "evaluate": "tsx scripts/evaluate.ts",
+    "smoke": "tsx scripts/smoke.ts",
+    "vinext:check": "npx --yes vinext check",
+    "vinext:dev": "npx --yes vinext dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "next": "^16.4.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.4"
+  },
+  "private": true
+}

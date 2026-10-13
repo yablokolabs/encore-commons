@@ -1,0 +1,370 @@
+{
+  "recordedAt": "2026-10-13T11:30:12.724Z",
+  "origin": "https://hackathon.api.qloo.com",
+  "queries": {
+    "radiohead": [
+      {
+        "entityId": "70CAE5BF-2F4C-445C-A3E5-4EDACFC3591C",
+        "name": "Radiohead",
+        "types": [
+          "urn:entity:artist"
+        ],
+        "popularity": 0.9999966263060412,
+        "shortDescription": "Radiohead is an English rock band known for their innovative and experimental approach to music.",
+        "disambiguation": "Radiohead"
+      },
+      {
+        "entityId": "70CAE5BF-2F4C-445C-A3E5-4EDACFC3591C",
+        "name": "Radiohead",
+        "types": [
+          "urn:entity:person"
+        ],
+        "popularity": 0.9665528750502821,
+        "shortDescription": null,
+        "disambiguation": ""
+      },
+      {
+        "entityId": "1B71B1D7-E72E-45F2-95C1-ACEE0D87BDD4",
+        "name": "Radiohead",
+        "types": [
+          "urn:entity:person"
+        ],
+        "popularity": 0.9259629706134963,
+        "shortDescription": null,
+        "disambiguation": ""
+      },
+      {
+        "entityId": "3C3A5184-433C-4472-8CDA-6B6B815A568C",
+        "name": "Radiohead: In Rainbows - From the Basement",
+        "types": [
+          "urn:entity:movie"
+        ],
+        "popularity": 0.9693729886174648,
+        "shortDescription": null,
+        "disambiguation": "2008"
+      },
+      {
+        "entityId": "3D220CCE-CF67-4E92-9EFB-84CA01739270",
+        "name": "Radio Headspace",
+        "types": [
+          "urn:entity:podcast"
+        ],
+        "popularity": 0.8387442983632949,
+        "shortDescription": "Daily reflections to help listeners step out of internal chatter and external noise, exploring shared human experiences and limitless potential.",
+        "disambiguation": ""
+      }
+    ],
+    "in the mood for love": [
+      {
+        "entityId": "900B6C69-9D86-4153-B8FD-4D6CD726FCF8",
+        "name": "In the Mood for Love",
+        "types": [
+          "urn:entity:movie"
+        ],
+        "popularity": 0.998002116676386,
+        "shortDescription": null,
+        "disambiguation": "2000"
+      },
+      {
+        "entityId": "14AA5518-CB8C-4C56-9834-D318CE096AD0",
+        "name": "in the mood for love",
+        "types": [
+          "urn:entity:artist"
+        ],
+        "popularity": 0.9288420470225464,
+        "shortDescription": "",
+        "disambiguation": "in the mood for love"
+      },
+      {
+        "entityId": "14AA5518-CB8C-4C56-9834-D318CE096AD0",
+        "name": "in the mood for love",
+        "types": [
+          "urn:entity:person"
+        ],
+        "popularity": 0.04813494091171003,
+        "shortDescription": null,
+        "disambiguation": ""
+      },
+      {
+        "entityId": "7DA70A29-566C-432E-838E-94B951CF48E8",
+        "name": "So Good They Can't Ignore You: Why Skills Trump Passion in the Quest for Work You Love",
+        "types": [
+          "urn:entity:book"
+        ],
+        "popularity": 0.9649968039821023,
+        "shortDescription": null,
+        "disambiguation": "2012, Cal Newport"
+      },
+      {
+        "entityId": "BEC970C1-6410-4841-BB2A-817746B633FE",
+        "name": "I'm In No Mood For Love  (Writer Friends, #2)",
+        "types": [
+          "urn:entity:book"
+        ],
+        "popularity": 0.5038012212868392,
+        "shortDescription": "Clare wakes up next to her childhood crush after a wedding, complicating her resolve to avoid romance.",
+        "disambiguation": "2006, Rachel Gibson"
+      }
+    ],
+    "piranesi": [
+      {
+        "entityId": "55908017-4CFD-4688-9A7E-7B1FF04B171D",
+        "name": "Piranesi",
+        "types": [
+          "urn:entity:book"
+        ],
+        "popularity": 0.9990071944402888,
+        "shortDescription": "Piranesi explores a mysterious house, uncovering secrets about his identity and the world beyond.",
+        "disambiguation": "2020, Susanna Clarke"
+      },
+      {
+        "entityId": "4FBFAD28-ECE5-4786-A9BB-6BB45A69CF90",
+        "name": "Giovanni Battista Piranesi",
+        "types": [
+          "urn:entity:person"
+        ],
+        "popularity": null,
+        "shortDescription": "Italian painter (1720-1778)",
+        "disambiguation": "1720-10-04"
+      },
+      {
+        "entityId": "CD7628D6-8AC5-43E5-A2FA-12B29DA95EA1",
+        "name": "Der Architekt, der Rom neu erfand: Piranesi und seine Visionen",
+        "types": [
+          "urn:entity:movie"
+        ],
+        "popularity": null,
+        "shortDescription": null,
+        "disambiguation": "2026"
+      },
+      {
+        "entityId": "033A4B9E-5B6A-465C-A3A6-60CF11F545DA",
+        "name": "Piranesi Vita Lolita Evans",
+        "types": [
+          "urn:entity:person"
+        ],
+        "popularity": null,
+        "shortDescription": "(born 1992)",
+        "disambiguation": "1992-01-01"
+      },
+      {
+        "entityId": "D250D53E-BC58-42C7-BE3F-4A1C0DC92B7F",
+        "name": "Francesco Piranesi",
+        "types": [
+          "urn:entity:person"
+        ],
+        "popularity": null,
+        "shortDescription": "Italian engraver",
+        "disambiguation": "1761-01-01"
+      }
+    ],
+    "nina simone": [
+      {
+        "entityId": "AEB7DA4D-D5A8-43F1-9881-74DA17D8D521",
+        "name": "Nina Simone",
+        "types": [
+          "urn:entity:artist"
+        ],
+        "popularity": 0.9990857289371852,
+        "shortDescription": "Nina Simone was an American singer, songwriter, pianist, and civil rights activist known for her unique blend of jazz, blues, and soul music.",
+        "disambiguation": "Nina Simone"
+      },
+      {
+        "entityId": "A0A9F53B-D8CB-4C2F-AFB8-E9FED99F22E9",
+        "name": "Nina Simone",
+        "types": [
+          "urn:entity:person"
+        ],
+        "popularity": 0.8882051728074276,
+        "shortDescription": "American singer, songwriter and pianist and civil rights activist (1933–2003)",
+        "disambiguation": "1933-02-21"
+      },
+      {
+        "entityId": "2853FB02-E844-4157-903C-0A0C683FBEAF",
+        "name": "Nina",
+        "types": [
+          "urn:entity:movie"
+        ],
+        "popularity": 0.7208795006371628,
+        "shortDescription": null,
+        "disambiguation": "2016"
+      },
+      {
+        "entityId": "6D1EB4B0-2685-4E5D-9D1E-BA51EE79D0BC",
+        "name": "Nina Simone: Live at Montreux 1976",
+        "types": [
+          "urn:entity:movie"
+        ],
+        "popularity": 0.5620855742024666,
+        "shortDescription": null,
+        "disambiguation": "2005"
+      },
+      {
+        "entityId": "1321F55A-716D-4044-B1B5-182EE19F6243",
+        "name": "I Put a Spell on You: The Autobiography of Nina Simone",
+        "types": [
+          "urn:entity:book"
+        ],
+        "popularity": 0.9108141005589632,
+        "shortDescription": "Nina Simone recounts her life, music career, and civil rights activism.",
+        "disambiguation": "1991, Nina Simone"
+      }
+    ],
+    "seven samurai": [
+      {
+        "entityId": "7F1163D3-D842-4121-AA13-68FA930E0F09",
+        "name": "Seven Samurai",
+        "types": [
+          "urn:entity:movie"
+        ],
+        "popularity": 0.9962526188470593,
+        "shortDescription": null,
+        "disambiguation": "1954"
+      },
+      {
+        "entityId": "D6AF6BF3-8E3E-4352-86CC-7BD5FD2DFB95",
+        "name": "Seven Samurai 20XX",
+        "types": [
+          "urn:entity:videogame"
+        ],
+        "popularity": 0.9428436654620024,
+        "shortDescription": "A young samurai must gather allies to protect a village from a humanoid invasion, facing treachery and powerful enemies along the way.",
+        "disambiguation": "2004-03-12, Dimps Corporation"
+      },
+      {
+        "entityId": "08CAC2DD-7952-4344-AC43-537690CF7F81",
+        "name": "Snow White and the Seven Samurai",
+        "types": [
+          "urn:entity:book"
+        ],
+        "popularity": 0.8060051136286364,
+        "shortDescription": "Fairy tale characters face chaos when technology disrupts their world.",
+        "disambiguation": "1999, Tom Holt"
+      },
+      {
+        "entityId": "5C572CFD-8C71-4543-BEA0-E101C7002787",
+        "name": "Seven Samurai",
+        "types": [
+          "urn:entity:book"
+        ],
+        "popularity": null,
+        "shortDescription": null,
+        "disambiguation": "2007, Hikozza"
+      },
+      {
+        "entityId": "F5739087-A826-41DE-9917-795BA2353B88",
+        "name": "Seven Samurai Swept Away in a River",
+        "types": [
+          "urn:entity:book"
+        ],
+        "popularity": 0.06007493641964395,
+        "shortDescription": "A Korean writer reflects on Texas culture and history while questioning the nature of novels.",
+        "disambiguation": "2019, Young-moon Jung"
+      }
+    ],
+    "daft punk": [
+      {
+        "entityId": "012EF80C-B187-4ECB-9C3D-9CA5228B503C",
+        "name": "Daft Punk",
+        "types": [
+          "urn:entity:artist"
+        ],
+        "popularity": 0.999976384142289,
+        "shortDescription": "Daft Punk was a French electronic music duo known for their influential house music and iconic robot personas.",
+        "disambiguation": "Daft Punk"
+      },
+      {
+        "entityId": "012EF80C-B187-4ECB-9C3D-9CA5228B503C",
+        "name": "Daft Punk",
+        "types": [
+          "urn:entity:person"
+        ],
+        "popularity": 0.9511312118807145,
+        "shortDescription": null,
+        "disambiguation": ""
+      },
+      {
+        "entityId": "B5645E88-5C45-4CEC-990C-CAC09726E8CD",
+        "name": "Daft Punk",
+        "types": [
+          "urn:entity:person"
+        ],
+        "popularity": 0.8198867157347713,
+        "shortDescription": null,
+        "disambiguation": ""
+      },
+      {
+        "entityId": "A7F15BED-BBA7-40EC-92EF-C30D06A02D90",
+        "name": "Electroma",
+        "types": [
+          "urn:entity:movie"
+        ],
+        "popularity": 0.8629560033694033,
+        "shortDescription": null,
+        "disambiguation": "2006"
+      },
+      {
+        "entityId": "3776F2C3-1B15-42E5-85DE-89149A826A89",
+        "name": "Daft Punk Unchained",
+        "types": [
+          "urn:entity:movie"
+        ],
+        "popularity": 0.8023175446553922,
+        "shortDescription": null,
+        "disambiguation": "2015"
+      }
+    ],
+    "blade runner": [
+      {
+        "entityId": "A74A74BB-CE73-4A76-807B-8BD1714BC463",
+        "name": "Blade Runner",
+        "types": [
+          "urn:entity:movie"
+        ],
+        "popularity": 0.9981641072161386,
+        "shortDescription": null,
+        "disambiguation": "1982"
+      },
+      {
+        "entityId": "8811752C-9A34-470B-9E41-CC9581771F1C",
+        "name": "Oscar Pistorius",
+        "types": [
+          "urn:entity:person"
+        ],
+        "popularity": 0.8280351376914797,
+        "shortDescription": "South African sprinter and convicted murderer (born 1986)",
+        "disambiguation": "1986-11-22"
+      },
+      {
+        "entityId": "61CE3A12-FEA3-4C42-B65D-5883FAB7A23D",
+        "name": "Blade Runner",
+        "types": [
+          "urn:entity:artist"
+        ],
+        "popularity": 0.7739456362955491,
+        "shortDescription": "",
+        "disambiguation": "Blade Runner"
+      },
+      {
+        "entityId": "E8961A03-1FA9-4D74-8C43-0C4493B6B1E8",
+        "name": "Blade Runner",
+        "types": [
+          "urn:entity:book"
+        ],
+        "popularity": 0.7513770077112432,
+        "shortDescription": null,
+        "disambiguation": "1997, Scott Bukatman"
+      },
+      {
+        "entityId": "3A02361C-987B-4F7E-9AAD-071C3853AD92",
+        "name": "Blade Runner 2049",
+        "types": [
+          "urn:entity:movie"
+        ],
+        "popularity": 0.9989308624376336,
+        "shortDescription": null,
+        "disambiguation": "2017"
+      }
+    ]
+  }
+}

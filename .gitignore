@@ -1,0 +1,27 @@
+# dependencies
+node_modules/
+
+# next / build output
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+next-env.d.ts
+
+# local secrets: NEVER commit. Only .env.example is tracked.
+.env
+.env.*
+!.env.example
+
+# media working directory (Videowright render cache)
+videos/node_modules/
+videos/renders/
+docs/media/*.wav
+docs/media/*.tmp
+
+# editor / OS
+.DS_Store
+*.log
+npm-debug.log*
+coverage/

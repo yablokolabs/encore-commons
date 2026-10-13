@@ -1,0 +1,33 @@
+{
+  "recordedAt": "2026-10-13T11:30:12.724Z",
+  "method": "GET",
+  "route": "/search",
+  "params": {
+    "query": "Radiohead",
+    "types": "urn:entity:artist",
+    "take": 2
+  },
+  "note": "Sanitised live response. X-Api-Key header omitted.",
+  "response": [
+    {
+      "entityId": "70CAE5BF-2F4C-445C-A3E5-4EDACFC3591C",
+      "name": "Radiohead",
+      "types": [
+        "urn:entity:artist"
+      ],
+      "popularity": 0.9999966263060412,
+      "shortDescription": "Radiohead is an English rock band known for their innovative and experimental approach to music.",
+      "disambiguation": "Radiohead"
+    },
+    {
+      "entityId": "70CAE5BF-2F4C-445C-A3E5-4EDACFC3591C",
+      "name": "Radiohead",
+      "types": [
+        "urn:entity:person"
+      ],
+      "popularity": 0.9665528750502821,
+      "shortDescription": null,
+      "disambiguation": ""
+    }
+  ]
+}

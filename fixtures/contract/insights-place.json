@@ -1,0 +1,54 @@
+{
+  "recordedAt": "2026-10-13T11:30:12.724Z",
+  "method": "GET",
+  "route": "/v2/insights",
+  "params": {
+    "filter.type": "urn:entity:place",
+    "signal.interests.entities": "<confirmed entity id>",
+    "filter.location.query": "Berlin",
+    "take": 3
+  },
+  "note": "Sanitised live response. X-Api-Key header omitted.",
+  "response": [
+    {
+      "name": "Memorial to Homosexuals Persecuted Under Nazism",
+      "entityId": "789948B6-B734-4867-ABD0-D81E479F1835",
+      "affinity": 0.8624521216613198,
+      "city": "Tiergarten Bezirk",
+      "factFields": [
+        "hours",
+        "phone",
+        "website",
+        "businessRating",
+        "address"
+      ]
+    },
+    {
+      "name": "KW Institute for Contemporary Art",
+      "entityId": "AAC29158-4691-4285-BEE1-59144AC3828E",
+      "affinity": 0.849344287467379,
+      "city": "Mitte",
+      "factFields": [
+        "hours",
+        "phone",
+        "website",
+        "businessRating",
+        "goodFor",
+        "address"
+      ]
+    },
+    {
+      "name": "Reichstagskuppel",
+      "entityId": "F0F9AA23-11E7-4654-9762-73F4E2938FCB",
+      "affinity": 0.8475316282204467,
+      "city": "Tiergarten Bezirk",
+      "factFields": [
+        "hours",
+        "website",
+        "businessRating",
+        "goodFor",
+        "address"
+      ]
+    }
+  ]
+}

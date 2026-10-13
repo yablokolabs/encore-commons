@@ -1,0 +1,190 @@
+{
+  "generatedAt": "2026-10-13T11:41:14.634Z",
+  "qlooMode": "live",
+  "cscsModel": "swiss-ai/Apertus-v1.5-70B",
+  "group": {
+    "name": "Demo group — Berlin show",
+    "showLocation": "Berlin",
+    "participants": [
+      {
+        "label": "Ada",
+        "favourites": [
+          "Radiohead",
+          "In the Mood for Love",
+          "Piranesi"
+        ],
+        "confirmedEntities": 3
+      },
+      {
+        "label": "Bo",
+        "favourites": [
+          "Nina Simone",
+          "Seven Samurai"
+        ],
+        "confirmedEntities": 2
+      },
+      {
+        "label": "Cy",
+        "favourites": [
+          "Daft Punk",
+          "Blade Runner"
+        ],
+        "confirmedEntities": 2
+      }
+    ]
+  },
+  "frozenCaseCount": 1,
+  "strategies": [
+    {
+      "strategy": "qloo_grounded",
+      "taskCompleted": true,
+      "candidatesCompared": 24,
+      "rankedCandidates": 24,
+      "topPick": "Absinthdepot Berlin",
+      "worstPersonAffinity": 0.792977,
+      "meanAffinity": 0.822006,
+      "participantCoverage": 1,
+      "agreementRate": 0.6666666666666666,
+      "qlooCalls": 14,
+      "cscsCalls": 0,
+      "latencyMs": 14900
+    },
+    {
+      "strategy": "popularity_only",
+      "taskCompleted": true,
+      "candidatesCompared": 24,
+      "rankedCandidates": 24,
+      "topPick": "East Side Gallery",
+      "worstPersonAffinity": 0.771924,
+      "meanAffinity": 0.831708,
+      "participantCoverage": 1,
+      "agreementRate": 1,
+      "qlooCalls": 14,
+      "cscsCalls": 0,
+      "latencyMs": 14900
+    },
+    {
+      "strategy": "cscs_only_no_qloo",
+      "taskCompleted": true,
+      "modelAnswer": [
+        {
+          "name": "Berghain",
+          "why": "Iconic techno club in Berlin with a legendary atmosphere, large space for diverse music tastes, and a post-show vibe that appeals to fans of electronic music (Daft Punk), soul/jazz (Nina Simone), and cinematic/artistic experiences (Blade Runner, Piranesi)."
+        },
+        {
+          "name": "Astra Kulturhaus",
+          "why": "Versatile cultural venue in Berlin hosting concerts, film screenings, and art events. It can accommodate a range of music genres from indie/rock (Radiohead) to jazz (Nina Simone) and provides a communal space for groups with varied tastes to unwind together."
+        },
+        {
+          "name": "Kino Babylon",
+          "why": "Independent cinema and cultural hub in Berlin that screens classic and art-house films (like 'Seven Samurai') and hosts live music events. Ideal for friends who appreciate cinematic themes (Blade Runner) and diverse music, offering a unique post-show experience."
+        },
+        {
+          "name": "Lido",
+          "why": "Historic Berlin club with multiple rooms catering to different music styles, from techno to live jazz. It can satisfy Ada's love for Radiohead and Piranesi, Bo's for Nina Simone, and Cy's for Daft Punk in separate areas while still being one venue."
+        },
+        {
+          "name": "Prince Charles",
+          "why": "Intimate live music venue in Berlin known for indie, alternative, and jazz acts. It provides a cozy, inclusive atmosphere where friends can enjoy post-show drinks and conversation, fitting the eclectic tastes of the group."
+        }
+      ],
+      "modelRawStatus": "live",
+      "modelError": null,
+      "venuesNamed": 5,
+      "venuesGroundableInQloo": 5,
+      "groundingRate": 1,
+      "resolution": [
+        {
+          "name": "Berghain",
+          "resolved": true,
+          "entityId": "1FE0A06C-01FB-4C35-9432-228CE743FDDD"
+        },
+        {
+          "name": "Astra Kulturhaus",
+          "resolved": true,
+          "entityId": "2B5C2BE1-FD18-475E-83EF-1596A9859819"
+        },
+        {
+          "name": "Kino Babylon",
+          "resolved": true,
+          "entityId": "6179E6CE-37D7-49CA-B56B-3D1B74E42F5E"
+        },
+        {
+          "name": "Lido",
+          "resolved": true,
+          "entityId": "5244C769-2248-4EF5-9069-F2F47A331C85"
+        },
+        {
+          "name": "Prince Charles",
+          "resolved": true,
+          "entityId": "ADF2B934-777F-4B41-8685-B3AC8318ACC8"
+        }
+      ],
+      "venueScores": [
+        {
+          "name": "Berghain",
+          "entityId": "1FE0A06C-01FB-4C35-9432-228CE743FDDD",
+          "observedParticipants": 3,
+          "coverage": 1,
+          "worstAffinity": 0.7560982394426126,
+          "meanAffinity": 0.784860874178623
+        },
+        {
+          "name": "Astra Kulturhaus",
+          "entityId": "2B5C2BE1-FD18-475E-83EF-1596A9859819",
+          "observedParticipants": 0,
+          "coverage": 0,
+          "worstAffinity": null,
+          "meanAffinity": null
+        },
+        {
+          "name": "Kino Babylon",
+          "entityId": "6179E6CE-37D7-49CA-B56B-3D1B74E42F5E",
+          "observedParticipants": 0,
+          "coverage": 0,
+          "worstAffinity": null,
+          "meanAffinity": null
+        },
+        {
+          "name": "Lido",
+          "entityId": "5244C769-2248-4EF5-9069-F2F47A331C85",
+          "observedParticipants": 0,
+          "coverage": 0,
+          "worstAffinity": null,
+          "meanAffinity": null
+        },
+        {
+          "name": "Prince Charles",
+          "entityId": "ADF2B934-777F-4B41-8685-B3AC8318ACC8",
+          "observedParticipants": 3,
+          "coverage": 1,
+          "worstAffinity": 0.7394502188533765,
+          "meanAffinity": 0.7695652437198363
+        }
+      ],
+      "bestByWorstPersonAffinity": {
+        "name": "Berghain",
+        "entityId": "1FE0A06C-01FB-4C35-9432-228CE743FDDD",
+        "observedParticipants": 3,
+        "coverage": 1,
+        "worstAffinity": 0.7560982394426126,
+        "meanAffinity": 0.784860874178623
+      },
+      "worstPersonAffinityOfBestGroundable": 0.7560982394426126,
+      "qlooCallsForGroundingAndScoring": 20,
+      "cscsCalls": 1,
+      "latencyMs": 18576,
+      "note": "Every venue the unguided model named was groundable in Qloo, so it was scored on the same affinity evidence. Naming real venues is not the same as choosing them for this group's taste."
+    }
+  ],
+  "comparisons": {
+    "topPickOverlapPopularityVsQloo": false,
+    "qlooTopPickWorstMinusPopularityWorst": 0.021053
+  },
+  "limitations": [
+    "This is an algorithm comparison on frozen inputs, not a user study. Rank utility is not measured user satisfaction.",
+    "Affinity is a provider cultural-fit signal, not a probability of enjoyment.",
+    "One group is evaluated here. Results are illustrative of the mechanism, not a general claim of superiority.",
+    "When run without --live-qloo, Qloo responses come from fixtures recorded on 2026-10-13T11:30:12.724Z and should be read as replay, not live."
+  ]
+}

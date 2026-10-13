@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 640" width="1180" height="640" role="img"
+       aria-label="Encore Commons architecture: a browser client calls server routes, which validate the request, run a bounded agent state machine, call the Qloo adapter and the CSCS Apertus 1.5 70B adapter, and keep a short-lived session store. The Qloo adapter calls the Qloo hackathon origin and the CSCS adapter calls the CSCS inference API. Credentials stay server-side.">
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#6F6382"/>
+      </marker>
+      <marker id="arrow-coral" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#E85C4A"/>
+      </marker>
+    </defs>
+
+    <!-- paper -->
+    <rect x="0" y="0" width="1180" height="640" fill="#FBF7F0"/>
+
+    <!-- zones (drawn before arrows and nodes) -->
+    <rect x="24" y="120" width="250" height="180" rx="8" fill="#241634" opacity="0.02"/>
+    <rect x="24" y="120" width="250" height="180" rx="8" fill="none" stroke="#241634" opacity="0.10" stroke-width="0.8"/>
+    <rect x="66" y="124" width="166" height="13" rx="2" fill="#FBF7F0"/>
+    <text x="149" y="134" fill="#6F6382" font-size="7.5" font-family="ui-sans-serif, system-ui, sans-serif" text-anchor="middle" letter-spacing="0.14em">BROWSER · NO CREDENTIALS</text>
+
+    <rect x="310" y="120" width="520" height="380" rx="8" fill="#241634" opacity="0.02"/>
+    <rect x="310" y="120" width="520" height="380" rx="8" fill="none" stroke="#6F6382" stroke-width="1" stroke-dasharray="5,4"/>
+    <rect x="430" y="124" width="300" height="13" rx="2" fill="#FBF7F0"/>
+    <text x="580" y="134" fill="#6F6382" font-size="7.5" font-family="ui-sans-serif, system-ui, sans-serif" text-anchor="middle" letter-spacing="0.14em">TRUST BOUNDARY · CREDENTIALS STAY SERVER-SIDE</text>
+
+    <rect x="866" y="120" width="290" height="270" rx="8" fill="#241634" opacity="0.02"/>
+    <rect x="866" y="120" width="290" height="270" rx="8" fill="none" stroke="#241634" opacity="0.10" stroke-width="0.8"/>
+    <rect x="948" y="124" width="126" height="13" rx="2" fill="#FBF7F0"/>
+    <text x="1011" y="134" fill="#6F6382" font-size="7.5" font-family="ui-sans-serif, system-ui, sans-serif" text-anchor="middle" letter-spacing="0.14em">PROVIDERS · EXTERNAL</text>
+
+    <!-- connectors (behind nodes) -->
+    <!-- browser -> validation -->
+    <line x1="249" y1="198" x2="336" y2="198" stroke="#6F6382" stroke-width="1.2" marker-end="url(#arrow)"/>
+    <rect x="272" y="186" width="42" height="11" fill="#FBF7F0"/>
+    <text x="293" y="194" fill="#6F6382" font-size="8" font-family="ui-sans-serif, system-ui, sans-serif" text-anchor="middle">request</text>
+
+    <!-- validation -> agent (vertical, same column) -->
+    <line x1="441" y1="226" x2="441" y2="270" stroke="#6F6382" stroke-width="1.2" marker-end="url(#arrow)"/>
+    <rect x="446" y="238" width="62" height="11" fill="#FBF7F0"/>
+    <text x="447" y="246" fill="#6F6382" font-size="8" font-family="ui-sans-serif, system-ui, sans-serif">validated</text>
+
+    <!-- agent -> qloo adapter (elbow) -->
+    <path d="M546,314 H560 Q568,314 568,306 V206 Q568,198 576,198 H590"
+          fill="none" stroke="#E85C4A" stroke-width="1.2" marker-end="url(#arrow-coral)"/>
+    <rect x="574" y="246" width="76" height="11" fill="#FBF7F0"/>
+    <text x="576" y="254" fill="#E85C4A" font-size="8" font-family="ui-sans-serif, system-ui, sans-serif">taste signals</text>
+
+    <!-- agent -> cscs adapter (horizontal) -->
+    <line x1="546" y1="314" x2="590" y2="314" stroke="#6F6382" stroke-width="1.2" marker-end="url(#arrow)"/>
+    <rect x="549" y="302" width="40" height="11" fill="#FBF7F0"/>
+    <text x="569" y="310" fill="#6F6382" font-size="8" font-family="ui-sans-serif, system-ui, sans-serif" text-anchor="middle">facts</text>
+
+    <!-- agent -> session store (vertical, same column) -->
+    <line x1="441" y1="358" x2="441" y2="400" stroke="#6F6382" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+    <rect x="446" y="370" width="56" height="11" fill="#FBF7F0"/>
+    <text x="447" y="378" fill="#6F6382" font-size="8" font-family="ui-sans-serif, system-ui, sans-serif">plan, trace</text>
+
+    <!-- qloo adapter -> qloo origin -->
+    <line x1="800" y1="198" x2="891" y2="198" stroke="#E85C4A" stroke-width="1.2" marker-end="url(#arrow-coral)"/>
+    <rect x="806" y="186" width="80" height="11" fill="#FBF7F0"/>
+    <text x="808" y="194" fill="#E85C4A" font-size="8" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">X-Api-Key</text>
+
+    <!-- cscs adapter -> cscs api -->
+    <line x1="800" y1="314" x2="891" y2="314" stroke="#6F6382" stroke-width="1.2" marker-end="url(#arrow)"/>
+    <rect x="806" y="302" width="80" height="11" fill="#FBF7F0"/>
+    <text x="808" y="310" fill="#6F6382" font-size="8" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">Bearer</text>
+
+    <!-- nodes -->
+    <!-- browser client -->
+    <rect x="49" y="160" width="200" height="76" rx="8" fill="#FFFDFA" stroke="#D8D0C4" stroke-width="1.2"/>
+    <text x="63" y="182" fill="#6F6382" font-size="7.5" font-family="ui-sans-serif, system-ui, sans-serif" letter-spacing="0.12em">CLIENT</text>
+    <text x="63" y="199" fill="#241634" font-size="11.5" font-weight="600" font-family="ui-sans-serif, system-ui, sans-serif">Group board · shortlist</text>
+    <text x="63" y="214" fill="#6F6382" font-size="9.5" font-family="ui-sans-serif, system-ui, sans-serif">Confirm matches, see each</text>
+    <text x="63" y="226" fill="#6F6382" font-size="9.5" font-family="ui-sans-serif, system-ui, sans-serif">person's fit, veto, read trace</text>
+
+    <!-- validation -->
+    <rect x="336" y="170" width="210" height="56" rx="8" fill="#FFFDFA" stroke="#D8D0C4" stroke-width="1.2"/>
+    <text x="350" y="191" fill="#6F6382" font-size="7.5" font-family="ui-sans-serif, system-ui, sans-serif" letter-spacing="0.12em">ROUTE HANDLERS</text>
+    <text x="350" y="208" fill="#241634" font-size="11" font-weight="600" font-family="ui-sans-serif, system-ui, sans-serif">Zod validation · rate limit</text>
+
+    <!-- agent state machine (coral focal) -->
+    <rect x="336" y="270" width="210" height="88" rx="8" fill="#FFF6F4" stroke="#E85C4A" stroke-width="1.4"/>
+    <text x="350" y="291" fill="#E85C4A" font-size="7.5" font-family="ui-sans-serif, system-ui, sans-serif" letter-spacing="0.12em">DECISION CORE</text>
+    <text x="350" y="309" fill="#241634" font-size="11.5" font-weight="600" font-family="ui-sans-serif, system-ui, sans-serif">Bounded agent state machine</text>
+    <text x="350" y="324" fill="#6F6382" font-size="9.5" font-family="ui-sans-serif, system-ui, sans-serif">resolve → discover → score the</text>
+    <text x="350" y="337" fill="#6F6382" font-size="9.5" font-family="ui-sans-serif, system-ui, sans-serif">shared set → exclude → rank</text>
+    <text x="350" y="350" fill="#6F6382" font-size="9.5" font-family="ui-sans-serif, system-ui, sans-serif">→ explain · max 2 replans</text>
+
+    <!-- qloo adapter -->
+    <rect x="590" y="170" width="210" height="56" rx="8" fill="#FFFDFA" stroke="#D8D0C4" stroke-width="1.2"/>
+    <text x="604" y="191" fill="#6F6382" font-size="7.5" font-family="ui-sans-serif, system-ui, sans-serif" letter-spacing="0.12em">ADAPTER</text>
+    <text x="604" y="208" fill="#241634" font-size="11" font-weight="600" font-family="ui-sans-serif, system-ui, sans-serif">Qloo adapter</text>
+
+    <!-- cscs adapter -->
+    <rect x="590" y="270" width="210" height="88" rx="8" fill="#FFFDFA" stroke="#D8D0C4" stroke-width="1.2"/>
+    <text x="604" y="291" fill="#6F6382" font-size="7.5" font-family="ui-sans-serif, system-ui, sans-serif" letter-spacing="0.12em">ADAPTER</text>
+    <text x="604" y="309" fill="#241634" font-size="11" font-weight="600" font-family="ui-sans-serif, system-ui, sans-serif">CSCS Apertus 1.5 70B</text>
+    <text x="604" y="324" fill="#6F6382" font-size="9.5" font-family="ui-sans-serif, system-ui, sans-serif">Words the explanation from</text>
+    <text x="604" y="337" fill="#6F6382" font-size="9.5" font-family="ui-sans-serif, system-ui, sans-serif">provider facts; a rejected or</text>
+    <text x="604" y="350" fill="#6F6382" font-size="9.5" font-family="ui-sans-serif, system-ui, sans-serif">failed answer falls back</text>
+
+    <!-- session store -->
+    <rect x="336" y="400" width="210" height="56" rx="8" fill="#FFFDFA" stroke="#D8D0C4" stroke-width="1.2" stroke-dasharray="4,3"/>
+    <text x="350" y="421" fill="#6F6382" font-size="7.5" font-family="ui-sans-serif, system-ui, sans-serif" letter-spacing="0.12em">SESSION MEMORY</text>
+    <text x="350" y="438" fill="#241634" font-size="11" font-weight="600" font-family="ui-sans-serif, system-ui, sans-serif">Short-lived plan + trace</text>
+
+    <!-- qloo origin -->
+    <rect x="891" y="170" width="240" height="56" rx="8" fill="#FFFDFA" stroke="#D8D0C4" stroke-width="1.2"/>
+    <text x="905" y="191" fill="#6F6382" font-size="7.5" font-family="ui-sans-serif, system-ui, sans-serif" letter-spacing="0.12em">CULTURAL DATA</text>
+    <text x="905" y="208" fill="#241634" font-size="11" font-weight="600" font-family="ui-sans-serif, system-ui, sans-serif">Qloo hackathon origin</text>
+
+    <!-- cscs api -->
+    <rect x="891" y="270" width="240" height="88" rx="8" fill="#FFFDFA" stroke="#D8D0C4" stroke-width="1.2"/>
+    <text x="905" y="291" fill="#6F6382" font-size="7.5" font-family="ui-sans-serif, system-ui, sans-serif" letter-spacing="0.12em">LANGUAGE MODEL</text>
+    <text x="905" y="309" fill="#241634" font-size="11" font-weight="600" font-family="ui-sans-serif, system-ui, sans-serif">CSCS inference API</text>
+    <text x="905" y="324" fill="#6F6382" font-size="9.5" font-family="ui-sans-serif, system-ui, sans-serif">swiss-ai/Apertus-v1.5-70B</text>
+    <text x="905" y="340" fill="#6F6382" font-size="9.5" font-family="ui-sans-serif, system-ui, sans-serif">Verified live via /models and</text>
+    <text x="905" y="352" fill="#6F6382" font-size="9.5" font-family="ui-sans-serif, system-ui, sans-serif">/chat/completions</text>
+  </svg>
