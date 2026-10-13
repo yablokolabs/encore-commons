@@ -1,0 +1,103 @@
+1
+00:00:00,000 --> 00:00:06,072
+Three people, one night out, and no shared
+taste. Ada loves Radiohead and In the
+
+2
+00:00:06,130 --> 00:00:12,562
+Mood for Love. Bo wants Nina Simone. Cy
+wants Daft Punk and Blade Runner. Encore
+
+3
+00:00:12,608 --> 00:00:18,436
+Commons grounds each person's taste in real cultural data, then finds one venue they
+
+4
+00:00:18,471 --> 00:00:19,888
+can all say yes to.
+
+5
+00:00:20,271 --> 00:00:25,286
+You type where the show is, and each
+person names a few things they love. Those
+
+6
+00:00:25,344 --> 00:00:31,254
+favourites resolve to real Qloo entities.
+Nothing is scored against a guess: a
+
+7
+00:00:31,347 --> 00:00:36,444
+person confirms each match, and only
+confirmed entities reach the provider.
+
+8
+00:00:36,769 --> 00:00:42,272
+The agent is a bounded state machine,
+not an open-ended loop: five allowlisted
+
+9
+00:00:42,330 --> 00:00:48,066
+tools, at most two replans. This run
+queried places three times and scored
+
+10
+00:00:48,112 --> 00:00:50,852
+twenty-four candidates
+for all three people.
+
+11
+00:00:51,235 --> 00:00:57,086
+That produced Absinthdepot Berlin. Its
+worst-person affinity is zero point seven
+
+12
+00:00:57,156 --> 00:01:02,717
+nine three, the lowest score any single participant gave it. The group mean is zero
+
+13
+00:01:02,787 --> 00:01:06,572
+point eight two two, and
+nobody was averaged away.
+
+14
+00:01:07,082 --> 00:01:13,085
+Affinity is a ranking signal, not a promise, so a veto is a hard exclusion, not a
+
+15
+00:01:13,178 --> 00:01:19,134
+low score. Bo vetoes one venue; it stays
+visible with its reason, and the plan
+
+16
+00:01:19,215 --> 00:01:24,184
+rebuilds from discovery already
+paid for, with zero new Qloo calls.
+
+17
+00:01:24,787 --> 00:01:31,033
+Every step is on the record. This query
+took eleven steps: eight succeeded, three
+
+18
+00:01:31,080 --> 00:01:34,900
+were skipped because the work was
+already cached, and none failed.
+
+19
+00:01:35,341 --> 00:01:41,470
+It claims no more than it can show. Affinity is cultural fit, not a chance anyone
+
+20
+00:01:41,505 --> 00:01:47,682
+enjoys the night. Distance is a straight
+line, not travel time. Hours, price and
+
+21
+00:01:47,751 --> 00:01:53,905
+access are unverified metadata. Nothing
+is booked. The working app is public, and
+
+22
+00:01:53,974 --> 00:01:55,820
+its address is on screen.

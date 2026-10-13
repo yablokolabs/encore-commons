@@ -1,0 +1,223 @@
+{
+  "plan": {
+    "venue": "Absinthdepot Berlin",
+    "badges": [
+      "Worst-person affinity 0.793",
+      "Mean 0.822",
+      "100% coverage",
+      "CSCS Apertus 1.5 70B",
+      "unverified",
+      "unverified",
+      "unverified",
+      "unverified",
+      "unverified",
+      "unverified",
+      "unverified"
+    ],
+    "fit": [
+      {
+        "label": "Ada",
+        "value": "0.836",
+        "scale": "Affinity 0.836 for Ada on a 0 to 1 relative scale"
+      },
+      {
+        "label": "Bo",
+        "value": "0.793",
+        "scale": "Affinity 0.793 for Bo on a 0 to 1 relative scale"
+      },
+      {
+        "label": "Cy",
+        "value": "0.837",
+        "scale": "Affinity 0.837 for Cy on a 0 to 1 relative scale"
+      }
+    ],
+    "alternatives": 3,
+    "url": "http://127.0.0.1:3300/shortlist"
+  },
+  "tracePlan": {
+    "badges": [
+      "11 steps",
+      "7.48s total provider time",
+      "0 errors",
+      "Revision 0",
+      "Tool ceiling 40",
+      "Max replans 2",
+      "skipped",
+      "skipped",
+      "skipped",
+      "ok",
+      "ok",
+      "ok",
+      "ok",
+      "ok",
+      "ok",
+      "ok",
+      "ok"
+    ],
+    "steps": 11,
+    "rows": [
+      {
+        "index": "0",
+        "step": "confirm",
+        "tool": "search_entities",
+        "status": "skipped",
+        "results": "0",
+        "latency": "0 ms"
+      },
+      {
+        "index": "1",
+        "step": "confirm",
+        "tool": "search_entities",
+        "status": "skipped",
+        "results": "0",
+        "latency": "0 ms"
+      },
+      {
+        "index": "2",
+        "step": "confirm",
+        "tool": "search_entities",
+        "status": "skipped",
+        "results": "0",
+        "latency": "0 ms"
+      },
+      {
+        "index": "3",
+        "step": "query",
+        "tool": "query_places",
+        "status": "ok",
+        "results": "25",
+        "latency": "842 ms"
+      },
+      {
+        "index": "4",
+        "step": "query",
+        "tool": "query_places",
+        "status": "ok",
+        "results": "25",
+        "latency": "1212 ms"
+      },
+      {
+        "index": "5",
+        "step": "query",
+        "tool": "query_places",
+        "status": "ok",
+        "results": "25",
+        "latency": "1216 ms"
+      },
+      {
+        "index": "6",
+        "step": "evaluate",
+        "tool": "score_candidates",
+        "status": "ok",
+        "results": "24",
+        "latency": "599 ms"
+      },
+      {
+        "index": "7",
+        "step": "evaluate",
+        "tool": "score_candidates",
+        "status": "ok",
+        "results": "24",
+        "latency": "574 ms"
+      },
+      {
+        "index": "8",
+        "step": "evaluate",
+        "tool": "score_candidates",
+        "status": "ok",
+        "results": "24",
+        "latency": "567 ms"
+      },
+      {
+        "index": "9",
+        "step": "rank",
+        "tool": "apply_veto",
+        "status": "ok",
+        "results": "24",
+        "latency": "0 ms"
+      },
+      {
+        "index": "10",
+        "step": "explain",
+        "tool": "explain_plan",
+        "status": "ok",
+        "results": "348",
+        "latency": "2474 ms"
+      }
+    ],
+    "succeeded": 8,
+    "failed": 0,
+    "skipped": 3
+  },
+  "veto": {
+    "status": 200,
+    "target": "Reichstagskuppel",
+    "castBy": "Bo vetoes",
+    "venueAfterVeto": "Absinthdepot Berlin",
+    "proposalMoved": false,
+    "removedLines": [
+      "Reichstagskuppel — excluded for Bo. It had a worst-person affinity of 0.782."
+    ]
+  },
+  "traceReplan": {
+    "badges": [
+      "5 steps",
+      "2.92s total provider time",
+      "0 errors",
+      "Revision 1",
+      "Tool ceiling 40",
+      "Max replans 2",
+      "skipped",
+      "skipped",
+      "ok",
+      "skipped",
+      "ok"
+    ],
+    "steps": 5,
+    "rows": [
+      {
+        "index": "0",
+        "step": "resolve",
+        "tool": "search_entities",
+        "status": "skipped",
+        "results": "0",
+        "latency": "0 ms"
+      },
+      {
+        "index": "1",
+        "step": "query",
+        "tool": "query_places",
+        "status": "skipped",
+        "results": "0",
+        "latency": "0 ms"
+      },
+      {
+        "index": "2",
+        "step": "rank",
+        "tool": "apply_veto",
+        "status": "ok",
+        "results": "23",
+        "latency": "0 ms"
+      },
+      {
+        "index": "3",
+        "step": "exclude",
+        "tool": "apply_veto",
+        "status": "skipped",
+        "results": "0",
+        "latency": "0 ms"
+      },
+      {
+        "index": "4",
+        "step": "explain",
+        "tool": "explain_plan",
+        "status": "ok",
+        "results": "505",
+        "latency": "2918 ms"
+      }
+    ],
+    "succeeded": 2,
+    "failed": 0,
+    "skipped": 3
+  }
+}

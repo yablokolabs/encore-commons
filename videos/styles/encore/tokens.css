@@ -1,0 +1,58 @@
+/* Encore — design tokens for the demo video
+ *
+ * The same palette the application itself uses in app/globals.css, so the film
+ * and the product match: warm ivory paper, midnight-plum ink, one coral accent.
+ * Gold and violet are the restrained secondary colours the brand kit allows;
+ * they mark the two alternative participants only, and never a headline.
+ */
+
+:root {
+	/* Core palette — values copied from app/globals.css */
+	--color-bg: #fbf7f0; /* ivory paper */
+	--color-fg: #241634; /* midnight plum ink */
+	--color-accent: #e85c4a; /* coral */
+	--color-accent-dark: #c8432f;
+
+	/* Extended palette */
+	--color-surface: #fffdfa; /* raised ivory, for cards */
+	--color-muted: #6f6382; /* plum, muted, for labels and secondary type */
+	--color-soft: #4a3a5e; /* plum, soft, for body type at large sizes */
+	--color-border: #e6ddcf; /* hairline rule on ivory */
+	--color-wash: #fdecea; /* coral wash, for a marked card */
+	--color-gold: #d99a2b;
+	--color-violet: #7c56c9;
+
+	/* Typography. Loaded by styles/encore/fonts.css from this project's own
+	   dependency tree; see that file for the three licences. The `Variable`
+	   names are the ones the installed packages declare, with the static names
+	   after them so a machine that has those installed still resolves to a
+	   known face rather than the browser fallback. */
+	--font-display: "Instrument Serif", "Times New Roman", serif;
+	--font-body: "Geist Variable", "Geist", "Helvetica Neue", system-ui, sans-serif;
+	--font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
+
+	/* Spacing (px on the 1920x1080 canvas) */
+	--space-sm: 16px;
+	--space-md: 32px;
+	--space-lg: 64px;
+	--space-xl: 128px;
+
+	/* Motion */
+	--duration-fast: 220ms;
+	--duration-normal: 480ms;
+	--duration-slow: 900ms;
+
+	/* Style extensions */
+	--radius-sm: 3px;
+	--radius-md: 8px;
+	--radius-lg: 16px;
+	--stagger: 80ms;
+	--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+	--ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+	--rule-weight: 1px;
+	--scene-hold: 4s;
+
+	/* Safe area for 1920x1080 */
+	--safe-x: 128px;
+	--safe-y: 96px;
+}

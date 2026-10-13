@@ -1,0 +1,71 @@
+# Encore Commons backend — *instance* unit for the Azure test VM.
+#
+# This unit runs the live checkout in place, as the interactive user, so a code
+# edit only needs `sudo systemctl restart encore-backend` to take effect.
+#
+# INSTALLED AND ENABLED on this VM. Provenance — these are the commands that were
+# run, not a plan:
+#   sudo cp deploy/encore-backend.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now encore-backend
+#   journalctl -u encore-backend -f
+#
+# It is on 127.0.0.1:3300. The Psst backend owns 8787 and OnMe owns 8788; 3300 is
+# free and is the port the Cloudflare tunnel ingress points at.
+#
+# WHY `next start` AND NOT THE VINEXT PRODUCTION SERVER
+# The build target for submission is Sites (Vinext on Cloudflare Workers), and
+# `vinext check` reports this project at 91% compatible with zero issues. But
+# `vinext start` cannot serve this project today: `vinext build` emits its App
+# Router entry as `dist/server/index.mjs`, while `vinext start` looks for
+# `dist/server/index.js` and exits with "No build output found". Vite chooses the
+# `.mjs` extension because this package is not `"type": "module"`, and flipping
+# that flag would change module semantics for every script in the repository. So
+# the VM instance serves the same application through `next start`, which is
+# verified end to end, and the Sites deploy path — which bundles through
+# `@vinext/cloudflare` rather than this entry file — is unaffected. See
+# docs/DEPLOYMENT.md.
+#
+# Verify from outside:
+#   PUBLIC_BASE_URL=https://encore.yablokolabs.com npx tsx scripts/verify-public.ts
+
+[Unit]
+Description=Encore Commons backend (Qloo + Apertus group planner)
+Documentation=file:/home/azureuser/encore-commons/docs/DEPLOYMENT.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=azureuser
+Group=azureuser
+WorkingDirectory=/home/azureuser/encore-commons
+
+# The two provider keys and the non-secret provider settings live in this
+# git-ignored file (mode 0600). The leading '-' keeps the unit startable if the
+# file is absent — the app then reports the provider as not configured and
+# /api/health says so, rather than failing to boot.
+#
+# It is deliberately NOT the shared ~/.hermes/.env. Only the two keys this app
+# uses are copied into it, so no unrelated credential ever enters this process.
+EnvironmentFile=-/home/azureuser/encore-commons/.env.production
+Environment=NODE_ENV=production
+
+# PORT and the bind address are CLI flags rather than environment lines, on
+# purpose. For Next.js the flag is the documented, unambiguous interface, and the
+# loopback bind is security-relevant: the Cloudflare tunnel is the only ingress, so
+# nothing should be able to reach the port directly. Keeping that in the ExecStart
+# line means it is visible in the unit rather than in a file nobody reads.
+ExecStart=/home/azureuser/.local/bin/node /home/azureuser/encore-commons/node_modules/next/dist/bin/next start --port 3300 -H 127.0.0.1
+
+Restart=always
+RestartSec=2
+KillSignal=SIGTERM
+TimeoutStopSec=20
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=encore-backend
+
+[Install]
+WantedBy=multi-user.target

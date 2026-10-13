@@ -20,10 +20,15 @@ Not another single-user recommendation list. The product is the *agreement*.
 | CSCS Apertus 1.5 70B | **Live.** `/v1/models` and `/v1/chat/completions` verified; model pinned at 70B. |
 | Sites runtime | **Verified.** `vinext check` → 91% compatible, 0 issues; `vinext build` → exit 0; `vinext dev` served every route and ran a real plan. |
 | Tests | **70 tests, 8 files, passing.** Plus 16 live smoke checks and a 3-strategy ablation. |
-| Public URL | **Not deployed.** This is the one outstanding blocker. See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). |
+| Public URL | **Live: <https://encore.yablokolabs.com>** — verified signed out from the open internet, 31/31 checks. |
+| Demo video | **Produced.** 115.8 s narrated walkthrough in [docs/media](docs/media/), built from real captures of the running app. |
+| Voice | **Deviation disclosed.** The brief asked for a youthful adult British female voice; the account's free tier has no such premade voice and refuses library voices with HTTP 402, so the closest permitted British female voice was auditioned and used. See [docs/TOOLING_STATUS.md](docs/TOOLING_STATUS.md). |
 
-A local-only project is not an eligible submission, so the hosted deployment is
-tracked as an open blocker rather than quietly omitted.
+One thing is deliberately not claimed: the public host is a named Cloudflare
+tunnel on this account's own zone, **not** a Sites Worker deployment — publishing
+to Workers needs a Cloudflare account credential this environment does not hold.
+[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) states the difference rather than
+glossing over it.
 
 ## Architecture
 
@@ -171,6 +176,33 @@ Qloo — and three of them had no comparable affinity at all for this group.
 | [docs/BUILT_WITH.md](docs/BUILT_WITH.md) | Only the technologies genuinely used, with evidence |
 | [docs/BRANDING.md](docs/BRANDING.md) | Branding asset provenance |
 | [docs/LICENSE_THIRD_PARTY.md](docs/LICENSE_THIRD_PARTY.md) | Third-party data and service terms |
+
+## Demo video
+
+**[docs/media/encore-commons-demo.mp4](docs/media/encore-commons-demo.mp4)** — 115.8 seconds,
+1920×1080, narrated. Captions ship alongside it as
+[WebVTT](docs/media/encore-commons-demo.en.vtt) and [SRT](docs/media/encore-commons-demo.en.srt).
+
+Seven scenes: the group and its disagreement, the group board with the human
+confirmation step, the allowlisted agent with one run's measured counts, the
+proposal with every participant's own score, a veto and what the replan actually
+cost, the trace as the receipt, and the limits the project states about itself.
+
+The interface in the film is **recorded, not redrawn**: `videos/scripts/capture-app.mjs`
+drives the running application in Chromium and the scenes use those frames. Every
+figure quoted on screen was read back out of the DOM of the run being filmed, so
+none of it is retyped from a different session.
+
+Two things the film states plainly rather than smoothing over: affinity is a
+relative provider signal and **not** a probability of enjoyment, and the veto in it
+was cast against an alternative — so the proposal did not move, and the film's claim
+is the one the evidence supports, that a veto is a hard exclusion and the replan
+issued zero new Qloo calls.
+
+The video project is isolated under `videos/` and shares nothing with the Sites app.
+`npm run check` inside it runs three real checks: the derived advance timings agree
+with the recorded narration, the narration and the script agree with each other, and
+every scene fits the frame with the brand faces actually loaded.
 
 ## Project layout
 

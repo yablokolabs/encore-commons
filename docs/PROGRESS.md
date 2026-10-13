@@ -1,9 +1,14 @@
 # Encore Commons progress
 
 Current state as of October 13, 2026 (Asia/Kolkata): **the application is built,
-tested against live providers and verified through its own HTTP interface.
-It is not deployed.** Qloo and CSCS access are verified live. The public hosted
-URL is the one remaining blocker for submission eligibility.
+tested against live providers, verified through its own HTTP interface, and
+publicly deployed at <https://encore.yablokolabs.com>.** Qloo and CSCS access are
+verified live. A narrated demo video has been exported.
+
+Two things are deliberately *not* claimed: the public host is a named Cloudflare
+tunnel rather than a Sites Worker deployment (a credential for Workers publish is
+not held here), and the narration voice is the closest the account's free tier
+permits rather than the youthful adult British female voice the brief asked for.
 
 ## Milestones
 
@@ -11,7 +16,9 @@ URL is the one remaining blocker for submission eligibility.
 - [x] **M1 real discovery and participant scoring** — real search, location-scoped discovery, shared-candidate-set affinity scoring
 - [x] **M2 UI and veto/replan** — three accessible routes, veto with hard exclusion, labelled replan
 - [x] **M3 tests and ablation** — 70 tests, 16 live smoke checks, 3-strategy ablation with recorded results
-- [ ] **M4 authorized public deployment and submission package** — configuration and checklist ready; **not published**
+- [x] **M4 public deployment** — live at <https://encore.yablokolabs.com>, verified signed out from the open internet (31/31 checks)
+- [x] **M5 media** — narrated 115.8 s demo video exported with captions, from real captures of the running app
+- [ ] **M6 submission package** — Devpost write-up and video upload; nothing submitted without authorisation
 
 ## Append checkpoint
 
@@ -101,3 +108,64 @@ Timestamp/timezone; milestone; branch/commit; files; exact commands/exit/results
 - **No-footer inspection:** unchanged and re-verified on the served routes.
 - **Blocker:** the hosted publish itself. Needs a Sites workspace and runtime secrets.
 - **Next action:** publish with the runtime secrets, then walk the signed-out checklist.
+
+## Checkpoint 7 — public deployment, verification and the demo video (2026-10-13 13:52 IST)
+
+- **Milestone:** M4 complete, M5 complete. The project is now an eligible submission
+  in the sense that matters most: there is a public app anyone can open signed out.
+- **Public URL:** <https://encore.yablokolabs.com>. Verified from the open internet
+  with no cookie jar: `npx tsx scripts/verify-public.ts https://encore.yablokolabs.com`
+  → **all 31 checks pass**, including `qloo.mode = live`, a full 24-candidate plan in
+  7.9 s, a veto replanned in 2.19 s with the proposal moving off the vetoed venue, a
+  stale veto refused with 409, a malformed request refused with 400 with no stack
+  trace in the body, no footer marker on `/`, `/shortlist` or `/trace`, and **0 of 14
+  response bodies containing either credential**.
+- **Failure → cause → fix (verification):** the first public run failed one check —
+  *"veto replanned to a different venue"*. Location → `scripts/verify-public.ts`
+  vetoed a candidate that was **not** the current proposal, so the proposal correctly
+  did not change. Cause → my assertion, not the app. Fix → the veto now targets the
+  proposed venue, which is the case that must move the plan; the check was
+  strengthened to *"vetoed venue is not re-proposed"* rather than weakened.
+- **Hosting:** quick `trycloudflare.com` tunnels do not route from this environment —
+  proven by pointing one at a trivial static server, which 404'd at the Cloudflare
+  edge over both QUIC and HTTP/2. Named tunnels on the account's own zone do route,
+  which is the mechanism now in use. Service units `deploy/encore-backend.service`
+  and `deploy/encore-cloudflared.service` are `active (running)` and `enabled`.
+  **This is not a Sites Worker deployment** and `docs/DEPLOYMENT.md` says so.
+- **Video (M5):** `videos/` is an isolated Videowright project. `scripts/capture-app.mjs`
+  drives the real app in Chromium and saved 11 frames; every figure the film quotes is
+  read back out of the DOM of the run being filmed, in `assets/captures/run.json`.
+- **Voice selection, with the deviation stated:** the brief asked for a youthful adult
+  British female voice. This ElevenLabs account is on the **free** tier; its 21
+  reachable voices are all `premade`, the only British female ones are Alice and Lily
+  and both are `middle_aged`. The British female *young* voices are library voices and
+  the tier refuses them with **HTTP 402 `paid_plan_required`** — confirmed by request.
+  Both permitted voices were auditioned (both HTTP 200) and Alice was used. No spend
+  was authorised. Recorded in `audio_meta.json` beside the audio.
+- **Failure → cause → fix (video):** take 1 ran **124.4 s** against a 120 s cap. Cause
+  → the script was written for richness before it was measured. Fix → cut prose the
+  screen already carries (the 100% coverage figure is drawn in scene 3's own stat row),
+  re-recorded to **115.9 s**, and every scene's advance times were re-derived from the
+  new alignment in one command rather than hand-adjusted.
+- **Failure → cause → fix (derived timing):** `scripts/derive-advances.mjs` first wrote
+  the advance map **one level too high**, emitting the segment ids as siblings of
+  `perSegment` instead of inside it. Location → the `timing` block of `track.ts`. Cause
+  → a non-greedy regex stopped at the inner brace, so the rewrite was also not
+  idempotent. Fix → the block's end is now found from its own indentation, and the
+  command asserts the `perSegment` key exists before writing.
+- **Failure → cause → fix (layout):** `scripts/check-frames.mjs` measured three scenes
+  past the bottom safe area (`encore-limits` by 120 px, `encore-veto` by 26 px,
+  `encore-trace` by 2 px). Fixed the layouts; the re-run passes for all 7 scenes with
+  the brand faces confirmed loaded rather than silently substituted.
+- **Media checks:** `derive-advances --check` **PASS** (advances agree with the recorded
+  narration and are idempotent); `check-audio` **PASS** (durations agree, spans sum to
+  the take, every scene declares the paragraph that was recorded, provider script
+  matches, measured loudness −16.52 LUFS against the plan's −16);
+  `check-frames` **PASS** (7 scenes fit the frame).
+- **No-footer inspection:** no route carries a footer marker; the video has no closing
+  card, credits strip, powered-by mark or attribution; no commit message carries a
+  footer, trailer or signature.
+- **Hindsight:** verified checkpoint retained to bank `encore-commons` (no secrets, no
+  taste profiles).
+- **Next action:** the Devpost write-up and video upload are the remaining submission
+  steps, and neither is done without authorisation.

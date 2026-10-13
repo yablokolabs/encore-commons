@@ -1,0 +1,37 @@
+# Cloudflare *named* tunnel for Encore Commons - a stable hostname that survives
+# restarts, unlike a quick tunnel (which gets a new random hostname every run).
+#
+# Install:
+#   cp deploy/cloudflared-config.yml ~/.cloudflared/encore-config.yml
+#   sudo cp deploy/encore-cloudflared.service /etc/systemd/system/cloudflared-encore.service
+#   sudo systemctl daemon-reload && sudo systemctl enable --now cloudflared-encore
+#
+# Provenance (already done on this VM, recorded so it is reproducible):
+#   cloudflared tunnel create encore-backend        # -> 8aebeca1-b8cd-4594-880c-d6f0ad93eb38
+#   cloudflared tunnel route dns --overwrite-dns \
+#       8aebeca1-b8cd-4594-880c-d6f0ad93eb38 encore.yablokolabs.com
+#
+# The `--overwrite-dns` and the explicit UUID are both load-bearing. On the first
+# attempt the UUID was empty, and `route dns` silently created a CNAME pointing at
+# the tunnel named in the *default* ~/.cloudflared/config.yml - which on this VM is
+# the Psst tunnel. That is the same mistake documented in onme-config.yml, and it
+# produced exactly the 404 that note predicts. Always pass the UUID.
+#
+# Public origin: https://encore.yablokolabs.com
+#
+# The credentials file holds the tunnel secret. It lives only in ~/.cloudflared
+# (mode 0400) and is never committed.
+
+tunnel: 8aebeca1-b8cd-4594-880c-d6f0ad93eb38
+credentials-file: /home/azureuser/.cloudflared/8aebeca1-b8cd-4594-880c-d6f0ad93eb38.json
+
+# A full plan is one long-running POST (roughly 15-25s of live Qloo discovery plus
+# one Apertus call). That is an ordinary request with a bounded body, so no
+# WebSocket upgrade and no edge tuning are required. The app bounds its own tool
+# calls, replans and per-request deadlines, and holds a 32 KB body cap.
+ingress:
+  # The origin is loopback-only: this tunnel is the single ingress, so nothing
+  # needs to reach the port directly.
+  - hostname: encore.yablokolabs.com
+    service: http://127.0.0.1:3300
+  - service: http_status:404

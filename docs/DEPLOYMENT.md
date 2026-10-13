@@ -1,10 +1,42 @@
 # Deployment
 
-**Status: the app is verified on the Sites runtime locally, but not published. Publishing is the outstanding blocker for submission.**
+**Status: published and live at <https://encore.yablokolabs.com>.**
 
 The hackathon requires a live, externally hosted app that anyone can try signed
-out. Until a public URL exists, this repository is a working application and a
-complete deployment configuration — not an eligible submission.
+out. That now exists, and it was verified from the open internet rather than
+assumed from a config file.
+
+## The public deployment, as it actually is
+
+```
+https://encore.yablokolabs.com
+```
+
+| | |
+| --- | --- |
+| Served by | `next start` on `127.0.0.1:3300`, behind a named Cloudflare tunnel on this account's own zone (`yablokolabs.com`) |
+| Verified from | the open internet, signed out, no cookie jar — `npx tsx scripts/verify-public.ts https://encore.yablokolabs.com` |
+| Result | **all 31 checks pass** |
+| Provider mode on the public host | `qloo.mode = live`, `cscs` model `swiss-ai/Apertus-v1.5-70B`, both keys present (values never returned) |
+| Live public plan | 24 candidates, 24 ranked at full coverage, proposal `Absinthdepot Berlin`, explanation `cscs_grounded` |
+| Public veto | HTTP 200 in 2.19 s, attributed to `p-bo`, proposal moved off the vetoed venue, stale veto → 409 |
+| Footer scan | `/`, `/shortlist`, `/trace` contain no `footer`, `powered by`, `all rights reserved`, `generated with` or `co-authored-by` |
+| Secret scan | 14 response bodies scanned for both credential values → **0 found** |
+| Service units | `deploy/encore-backend.service` and `deploy/encore-cloudflared.service`, both `active (running)` and `enabled` |
+
+**This is not a Sites Worker deployment.** The selected target is Sites with the
+Vinext starter, and that runtime is verified locally (`vinext check`, `build`,
+`dev`, and a real plan through it — see below). Publishing to Cloudflare Workers
+needs `vinext init --platform=cloudflare` plus a Cloudflare account credential
+this environment does not hold. The tunnel route was used instead because it is
+the convention already proven on this host, and it was confirmed to route publicly
+before any DNS was created. Calling it a Sites deployment would be false, so it is
+called what it is.
+
+A short-lived `trycloudflare.com` quick tunnel was tried first and **does not
+route from this environment**: a trivial static server 404'd at the Cloudflare
+edge over both QUIC and HTTP/2. Named tunnels on the account's zone do route,
+which is why that is the mechanism in use.
 
 ## Verified locally (real, run today)
 

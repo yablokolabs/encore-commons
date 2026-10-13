@@ -1,0 +1,18 @@
+{
+  "note": [
+    "Which narrated sentence opens each reveal, as a 0-based sentence index into",
+    "that segment's recorded paragraph. One entry per `await ctx.waitForNext()`,",
+    "in order. scripts/derive-advances.mjs turns these into the advance times in",
+    "audio/tracks/v1/track.ts, so the picture changes on the sentence that",
+    "explains it and a re-record re-times the whole film in one command. When two",
+    "reveals cite one sentence, that sentence's speaking time is divided evenly",
+    "between them."
+  ],
+  "encore-context": [1],
+  "encore-group": [1, 2],
+  "encore-agents": [0, 1],
+  "encore-proposal": [1, 2],
+  "encore-veto": [1, 1],
+  "encore-trace": [1],
+  "encore-limits": [1, 5]
+}

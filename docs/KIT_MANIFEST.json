@@ -1,5 +1,5 @@
 {
-  "state": "Application built, tested against live Qloo and CSCS, verified over real HTTP. Not deployed.",
+  "state": "Application built, tested against live Qloo and CSCS, verified over real HTTP, and publicly deployed at https://encore.yablokolabs.com. Demo video produced.",
   "manifestNote": "The file hashes below describe the original documentation-only build kit as it was received. Several of those documents have since been rewritten with real implementation results (PROGRESS.md, BUILT_WITH.md, TOOLING_STATUS.md, DEVPOST_PROJECT_STORY.md, SITES_CSCS_SETUP.md is unchanged), so the hashes are historical and no longer match the working tree. They are retained only as a provenance record of the input kit.",
   "verifiedOn": "2026-10-13",
   "verified": {
@@ -8,11 +8,16 @@
     "tests": "70 tests across 8 files, all passing",
     "smoke": "16/16 live checks passing",
     "build": "next build exit 0; tsc --noEmit exit 0",
-    "livePlan": "24 candidates, 24 ranked, 100% participant coverage; veto replan in 2.45s with zero extra Qloo calls"
+    "livePlan": "24 candidates, 24 ranked, 100% participant coverage; veto replan in 2.45s with zero extra Qloo calls",
+    "publicUrl": "live at https://encore.yablokolabs.com — 31/31 signed-out checks pass from the open internet (scripts/verify-public.ts)",
+    "publicPlan": "proposal Absinthdepot Berlin; Ada 0.836 / Bo 0.793 / Cy 0.837; worst-person 0.793, mean 0.822, 100% coverage; veto replanned in 2.19s with zero new Qloo calls",
+    "video": "videos/ exported a 115.8s narrated MP4 plus WebVTT/SRT captions; scenes fit the frame with brand fonts loaded",
+    "videoChecks": "derive-advances --check PASS; check-audio PASS; check-frames PASS (7 scenes)"
   },
   "blockers": [
-    "No public hosted deployment yet: the Sites/Vinext target is prepared and documented but not executed, so the project is not yet an eligible submission.",
-    "Narration video not produced (Videowright and ElevenLabs voice selection pending)."
+    "Not a Sites Worker deployment: publishing to Cloudflare Workers needs `vinext init --platform=cloudflare` and a Cloudflare account credential this environment does not hold. The app is public through a named Cloudflare tunnel on the account's own zone instead, and docs/DEPLOYMENT.md states the difference.",
+    "Narration voice deviation: the brief asked for a youthful adult British female voice; this ElevenLabs account is on the free tier, whose only British female premades (Alice, Lily) are middle_aged, and the British female young voices are library voices the tier refuses with HTTP 402 paid_plan_required. Both permitted voices were auditioned and no spend was authorised.",
+    "nori senior-swe, Headroom and UditAkhourii/adhd remain unexecuted; switching Nori would overwrite this repository's AGENTS.md and MCP settings, so it was read rather than installed."
   ],
   "kitFiles": {
     "AGENTS.md": "cb7f6c54c304ce2d870f2f23e5430cc8b2a42be778fb48b6aaf7beceae28bc80",
@@ -54,6 +59,13 @@
     "docs/EVALUATION.md",
     "docs/architecture.html",
     "docs/architecture.svg",
-    "docs/architecture.png"
+    "docs/architecture.png",
+    "docs/media/encore-commons-demo.mp4",
+    "docs/media/encore-commons-demo.en.vtt",
+    "docs/media/encore-commons-demo.en.srt",
+    "deploy/encore-backend.service",
+    "deploy/encore-cloudflared.service",
+    "scripts/verify-public.ts",
+    "videos/ (isolated Videowright project: styles/encore, 7 segments, capture/derive/check scripts)"
   ]
 }

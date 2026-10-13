@@ -1,0 +1,21 @@
+/* Brand fonts — Encore
+ *
+ * The three families tokens.css names, served out of this project's own
+ * dependency tree. Nothing is fetched from a network, so a render on an offline
+ * machine produces the same pixels as one with a connection and no font has to
+ * be installed on the host.
+ *
+ * Instrument Serif is static (400, roman and italic — the italic is the accent
+ * the scenes set key phrases in). Geist and JetBrains Mono ship as variable
+ * faces, so every weight the scenes ask for comes from one file each, declared
+ * as `Geist Variable` and `JetBrains Mono Variable`.
+ *
+ * Licences: all three families are SIL Open Font License 1.1. The licence text
+ * ships with each package under node_modules/@fontsource*; it is neither
+ * modified nor removed here. Recorded in docs/LICENSE_THIRD_PARTY.md.
+ */
+
+@import '@fontsource/instrument-serif/latin-400.css';
+@import '@fontsource/instrument-serif/latin-400-italic.css';
+@import '@fontsource-variable/geist/wght.css';
+@import '@fontsource-variable/jetbrains-mono/wght.css';
